@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wallet Chogan">
+<meta name="theme-color" content="#0c0c14">
+<title>Wallet Chogan</title>
+
+<script>
+/* ╔══════════════════════════════════════════╗
+   ║   🔧 LES 3 CLÉS À PERSONNALISER          ║
+   ╚══════════════════════════════════════════╝ */
+
+const ACCESS_CODE = "CHOGAN2024";
+const ADMIN_EMAIL = "ouadi.nej@gmail.com"; // ← Votre Gmail (reçoit les demandes)
+const W3F_KEY     = "04e1ce0c-3c62-413d-ab06-7fdfe1afd91a";  // ← Clé Web3Forms (web3forms.com)
+
+/* ══════════════════════════════════════════ */
+</script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0c0c14; --surface:#16161f; --card:#1e1e2a;
+  --text:#fff;  --muted:rgba(255,255,255,.48);
+  --gold:#c9a84c; --gold2:#e8c870;
+  --st:env(safe-area-inset-top,0px);
+  --sb:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
+  font-family:-apple-system,'Helvetica Neue',sans-serif;
+  color:var(--text);-webkit-font-smoothing:antialiased}
+
+/* ─── SCREENS ─── */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;
+  transition:opacity .38s,transform .38s cubic-bezier(.4,0,.2,1);overflow:hidden}
+.screen.hidden{opacity:0;pointer-events:none;transform:scale(.96)}
+
+/* ─── SHARED ─── */
+.form-label{font-size:11px;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block}
+.finput{width:100%;background:var(--card);border:0.5px solid rgba(255,255,255,.12);
+  border-radius:12px;padding:14px 16px;color:var(--text);font-size:15px;
+  font-family:inherit;outline:none;transition:border-color .2s;margin-bottom:14px}
+.finput:focus{border-color:var(--gold)}
+.finput::placeholder{color:rgba(255,255,255,.25)}
+.btn-g{width:100%;padding:15px;border-radius:14px;
+  background:linear-gradient(135deg,#c9a84c,#8b5e1a);
+  border:none;color:#fff;font-size:15px;font-weight:700;
+  cursor:pointer;font-family:inherit;
+  box-shadow:0 4px 20px rgba(201,168,76,.3);
+  transition:opacity .2s,transform .15s;margin-top:4px}
+.btn-g:active{opacity:.85;transform:scale(.98)}
+.btn-g:disabled{opacity:.5;cursor:default}
+.btn-o{width:100%;padding:14px;border-radius:14px;background:transparent;
+  border:0.5px solid rgba(255,255,255,.2);color:var(--text);font-size:14px;
+  font-weight:500;cursor:pointer;font-family:inherit;margin-top:10px;
+  transition:background .2s}
+.btn-o:active{background:rgba(255,255,255,.07)}
+.or-sep{display:flex;align-items:center;gap:12px;margin:18px 0}
+.or-line{flex:1;height:0.5px;background:rgba(255,255,255,.1)}
+.or-txt{font-size:11px;color:rgba(255,255,255,.3)}
+.code-row{display:flex;gap:8px;margin-bottom:0}
+.cinput{flex:1;background:var(--card);border:0.5px solid rgba(255,255,255,.12);
+  border-radius:12px;padding:14px 16px;color:var(--text);font-size:19px;
+  font-weight:700;font-family:monospace;letter-spacing:.18em;outline:none;
+  transition:border-color .2s;text-transform:uppercase}
+.cinput:focus{border-color:var(--gold)}
+.cinput::placeholder{font-size:13px;letter-spacing:0;font-weight:400;
+  font-family:-apple-system,sans-serif}
+.arr{width:52px;height:52px;border-radius:12px;background:var(--gold);
+  border:none;color:#000;font-size:22px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.arr:active{opacity:.8}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.25);
+  border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite;
+  vertical-align:middle;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ─── LOCK ─── */
+#lock{background:var(--bg);justify-content:flex-end}
+.lock-top{flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding-top:calc(60px + var(--st));text-align:center}
+.lock-icon{width:80px;height:80px;border-radius:24px;
+  background:linear-gradient(135deg,#c9a84c,#8b5e1a);
+  display:flex;align-items:center;justify-content:center;font-size:38px;
+  box-shadow:0 12px 40px rgba(201,168,76,.4);margin-bottom:22px}
+.lock-h{font-size:26px;font-weight:700;margin-bottom:8px;letter-spacing:-.02em}
+.lock-s{font-size:14px;color:var(--muted);line-height:1.5;padding:0 36px}
+.lock-ico2{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.06);
+  border:0.5px solid rgba(255,255,255,.1);display:flex;align-items:center;
+  justify-content:center;font-size:20px;margin-top:24px}
+.sheet{background:var(--surface);border-radius:28px 28px 0 0;
+  padding:26px 22px calc(32px + var(--sb));
+  border-top:0.5px solid rgba(255,255,255,.08)}
+.sheet-h{font-size:17px;font-weight:700;margin-bottom:4px}
+.sheet-s{font-size:13px;color:var(--muted);margin-bottom:18px}
+
+/* ─── PENDING ─── */
+#pend{background:var(--bg);justify-content:flex-end}
+.pend-top{flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:40px 28px 0;text-align:center}
+.pulse{width:88px;height:88px;border-radius:50%;
+  background:rgba(201,168,76,.1);border:1.5px solid rgba(201,168,76,.35);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 24px;animation:pu 2s ease-in-out infinite;font-size:36px}
+@keyframes pu{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.3)}
+              50%{box-shadow:0 0 0 22px rgba(201,168,76,0)}}
+.pend-h{font-size:21px;font-weight:700;margin-bottom:10px}
+.pend-s{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:18px}
+.pend-box{background:var(--card);border:0.5px solid rgba(255,255,255,.08);
+  border-radius:16px;padding:14px 18px;font-size:13px;color:var(--muted);
+  line-height:1.7;text-align:left;width:100%;margin-bottom:2px}
+.pend-box strong{color:var(--text)}
+
+/* ─── MAIN ─── */
+#main{background:var(--bg)}
+.status{height:calc(44px + var(--st));padding-top:var(--st);
+  display:flex;align-items:center;justify-content:space-between;
+  padding-left:20px;padding-right:20px;flex-shrink:0}
+.s-time{font-size:15px;font-weight:700}
+.s-ico{font-size:12px;opacity:.7}
+.wh{padding:8px 22px 4px;display:flex;justify-content:space-between;
+  align-items:center;flex-shrink:0}
+.wh-b{font-size:11px;font-weight:500;color:var(--muted);
+  letter-spacing:.08em;text-transform:uppercase}
+.wh-t{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-top:2px}
+.wh-av{width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,#c9a84c,#8b5e1a);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;cursor:pointer;position:relative}
+.av-dot{position:absolute;top:-2px;right:-2px;width:10px;height:10px;
+  border-radius:50%;background:#32c864;border:1.5px solid var(--bg)}
+
+/* STACK */
+.stack{position:relative;flex:1;overflow:hidden;margin-top:10px}
+.wcard{position:absolute;left:14px;right:14px;height:190px;border-radius:22px;
+  overflow:hidden;cursor:pointer;
+  transition:top .42s cubic-bezier(.4,0,.2,1),transform .42s,opacity .32s;
+  will-change:transform,top;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.ci{position:relative;width:100%;height:100%;padding:18px 20px;
+  display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.cb1,.cb2{position:absolute;border-radius:50%}
+.ct{display:flex;justify-content:space-between;align-items:flex-start;
+  position:relative;z-index:2}
+.ct-c{font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  opacity:.65;margin-bottom:3px}
+.ct-n{font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.ct-i{width:42px;height:42px;border-radius:11px;background:rgba(255,255,255,.14);
+  border:0.5px solid rgba(255,255,255,.2);display:flex;align-items:center;
+  justify-content:center;font-size:21px}
+.cbx{display:flex;justify-content:space-between;align-items:flex-end;
+  position:relative;z-index:2}
+.cb-sl{font-size:10px;opacity:.55;letter-spacing:.04em;text-transform:uppercase;margin-bottom:3px}
+.cb-sv{font-size:24px;font-weight:700;letter-spacing:-.03em}
+.cb-ch{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.12);
+  border:0.5px solid rgba(255,255,255,.18);border-radius:20px;
+  padding:5px 11px;font-size:11px;font-weight:600}
+.cd{width:6px;height:6px;border-radius:50%}
+.t1{background:linear-gradient(135deg,#1a3380,#0a1840)}
+.t2{background:linear-gradient(135deg,#4a1580,#1a0835)}
+.t3{background:linear-gradient(135deg,#0e5c3a,#052818)}
+.t4{background:linear-gradient(135deg,#7a3010,#2e1005)}
+.t5{background:linear-gradient(135deg,#0b5060,#031e28)}
+.t6{background:linear-gradient(135deg,#7a1010,#2e0505)}
+
+/* DOTS / HINT */
+.dots{display:flex;gap:6px;justify-content:center;
+  padding:10px 0 6px;flex-shrink:0}
+.dot{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.22);
+  transition:all .3s}
+.dot.on{width:22px;background:#fff}
+.hint{font-size:11px;color:var(--muted);text-align:center;
+  padding-bottom:2px;flex-shrink:0;transition:opacity .4s}
+
+/* BOTTOM NAV */
+.bnav{display:flex;justify-content:space-around;
+  padding:8px 0 calc(8px + var(--sb));
+  border-top:0.5px solid rgba(255,255,255,.08);flex-shrink:0}
+.ni{display:flex;flex-direction:column;align-items:center;gap:4px;
+  font-size:10px;font-weight:500;color:var(--muted);
+  padding:4px 20px;cursor:pointer}
+.ni.on{color:#fff}
+.ni svg{width:22px;height:22px;stroke:currentColor;fill:none;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* DETAIL SHEET */
+#dpanel{position:fixed;inset:0;z-index:100;pointer-events:none}
+#dov{position:absolute;inset:0;background:rgba(0,0,0,0);transition:background .4s}
+#dsheet{position:absolute;bottom:0;left:0;right:0;background:#1a1a26;
+  border-radius:26px 26px 0 0;transform:translateY(100%);
+  transition:transform .45s cubic-bezier(.4,0,.2,1);
+  max-height:88vh;display:flex;flex-direction:column;
+  overflow:hidden;box-shadow:0 -10px 60px rgba(0,0,0,.7)}
+#dpanel.open{pointer-events:all}
+#dpanel.open #dov{background:rgba(0,0,0,.55)}
+#dpanel.open #dsheet{transform:translateY(0)}
+.shdl{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.18);
+  margin:12px auto 0;flex-shrink:0}
+.shcard{margin:14px 18px 0;border-radius:18px;padding:16px 18px;
+  position:relative;overflow:hidden;flex-shrink:0}
+.sht{display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:10px;position:relative;z-index:2}
+.shname{font-size:16px;font-weight:700}
+.shemo{font-size:24px}
+.shhv{font-size:40px;font-weight:700;letter-spacing:-.03em;line-height:1;
+  position:relative;z-index:2}
+.shhl{font-size:10px;opacity:.6;letter-spacing:.05em;text-transform:uppercase;
+  margin-top:5px;position:relative;z-index:2}
+.fpills{display:flex;flex-wrap:wrap;gap:6px;padding:12px 18px 0}
+.fp{padding:5px 14px;border-radius:20px;background:rgba(255,255,255,.08);
+  border:0.5px solid rgba(255,255,255,.14);font-size:12px;font-weight:600}
+.fa{opacity:.28;font-size:14px;align-self:center}
+.shbody{flex:1;overflow-y:auto;padding:10px 18px calc(28px + var(--sb));
+  -webkit-overflow-scrolling:touch}
+.shbody::-webkit-scrollbar{display:none}
+.si{display:flex;align-items:flex-start;gap:13px;padding:13px 0;
+  border-bottom:0.5px solid rgba(255,255,255,.07);animation:up .3s both}
+.si:last-child{border-bottom:none}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.sii{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;
+  justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.sit{font-size:14px;font-weight:600;margin-bottom:3px}
+.sid{font-size:12px;color:rgba(255,255,255,.5);line-height:1.55}
+.siq{display:inline-block;margin-top:6px;font-size:11px;font-style:italic;
+  padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.06);
+  border-left:2px solid currentColor;color:rgba(255,255,255,.55)}
+
+/* ADMIN PW OVERLAY */
+#apov{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.8);
+  backdrop-filter:blur(10px);display:flex;align-items:flex-end;
+  justify-content:center;padding:0;
+  opacity:0;pointer-events:none;transition:opacity .3s}
+#apov.show{opacity:1;pointer-events:all}
+.pw-box{background:var(--surface);border-radius:26px 26px 0 0;
+  border-top:0.5px solid rgba(255,255,255,.1);
+  padding:24px 22px calc(28px + var(--sb));width:100%;max-width:480px}
+.pw-h{font-size:18px;font-weight:700;margin-bottom:4px}
+.pw-s{font-size:13px;color:var(--muted);margin-bottom:18px}
+.pw-hdl{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.18);
+  margin:0 auto 18px}
+
+/* TOAST */
+#toast{position:fixed;top:calc(var(--st) + 12px);left:16px;right:16px;
+  border-radius:14px;padding:14px 18px;font-size:14px;font-weight:500;
+  text-align:center;transform:translateY(-110px);opacity:0;
+  transition:all .35s cubic-bezier(.4,0,.2,1);z-index:999}
+#toast.show{transform:translateY(0);opacity:1}
+.t-ok{background:rgba(50,200,100,.92);color:#fff}
+.t-er{background:rgba(255,80,80,.92);color:#fff}
+.t-in{background:rgba(40,40,60,.96);border:0.5px solid rgba(255,255,255,.1);color:var(--text)}
+</style>
+</head>
+<body>
+
+<!-- ════════════ LOCK ════════════ -->
+<div id="lock" class="screen hidden">
+  <div class="lock-top">
+    <div class="lock-icon">💼</div>
+    <div class="lock-h">Wallet Chogan</div>
+    <div class="lock-s">Application réservée aux membres autorisés par l'administrateur.</div>
+    <div class="lock-ico2">🔒</div>
+  </div>
+  <div class="sheet">
+    <div class="sheet-h">Demander l'accès</div>
+    <div class="sheet-s">Renseignez vos coordonnées — l'admin reçoit un email instantanément.</div>
+
+    <label class="form-label">Votre prénom</label>
+    <input class="finput" id="rn" type="text" placeholder="Prénom">
+
+    <label class="form-label">Email ou téléphone</label>
+    <input class="finput" id="rc" type="text" placeholder="email@exemple.com ou 06...">
+
+    <button class="btn-g" id="req-btn" onclick="sendRequest()">📩 Envoyer la demande</button>
+
+    <div class="or-sep"><div class="or-line"></div><div class="or-txt">ou j'ai déjà un code</div><div class="or-line"></div></div>
+
+    <div class="code-row">
+      <input class="cinput" id="uc" type="text" placeholder="Code d'accès" maxlength="16">
+      <button class="arr" onclick="tryUnlock('uc')">→</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ PENDING ════════════ -->
+<div id="pend" class="screen hidden">
+  <div class="pend-top">
+    <div class="pulse">📬</div>
+    <div class="pend-h">Demande envoyée !</div>
+    <div class="pend-s">L'administrateur a reçu un email avec votre demande. Dès validation, vous recevrez votre code d'accès.</div>
+    <div class="pend-box" id="pend-box"></div>
+  </div>
+  <div class="sheet" style="margin-top:12px">
+    <label class="form-label" style="margin-bottom:8px;display:block">Vous avez reçu votre code ?</label>
+    <div class="code-row">
+      <input class="cinput" id="pc" type="text" placeholder="Entrez le code reçu" maxlength="16">
+      <button class="arr" onclick="tryUnlock('pc')">→</button>
+    </div>
+    <button class="btn-o" onclick="SS('lock')">← Retour</button>
+  </div>
+</div>
+
+<!-- ════════════ MAIN ════════════ -->
+<div id="main" class="screen hidden">
+  <div class="status">
+    <div class="s-time" id="clk">--:--</div>
+    <div class="s-ico">▲▲▲ WiFi 🔋</div>
+  </div>
+  <div class="wh">
+    <div><div class="wh-b">Wallet Chogan</div><div class="wh-t">Guide de Vente</div></div>
+    <div class="wh-av" id="av" onclick="avTap()">WC<div class="av-dot"></div></div>
+  </div>
+  <div class="stack" id="stack"></div>
+  <div class="hint" id="hint">Glissez ↕ pour naviguer · Appuyez pour ouvrir</div>
+  <div class="dots" id="dots"></div>
+  <div class="bnav">
+    <div class="ni on">
+      <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      Cartes
+    </div>
+    <div class="ni">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Historique
+    </div>
+    <div class="ni" onclick="showAdminPw()">
+      <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Admin
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL SHEET -->
+<div id="dpanel">
+  <div id="dov" onclick="cls()"></div>
+  <div id="dsheet"><div class="shdl"></div><div id="sc"></div></div>
+</div>
+
+<!-- ADMIN PW OVERLAY -->
+<div id="apov">
+  <div class="pw-box">
+    <div class="pw-hdl"></div>
+    <div class="pw-h">🔐 Accès Admin</div>
+    <div class="pw-s">Entrez le code maître pour accéder au panneau admin.</div>
+    <input class="finput" id="apw" type="password" placeholder="Code maître">
+    <button class="btn-g" id="apw-btn" onclick="checkAdminPw()">Accéder</button>
+    <button class="btn-o" onclick="closeAdminPw()">Annuler</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════
+   STORAGE
+═══════════════════════════════════════════ */
+const LS={
+  g:k=>{try{return JSON.parse(localStorage.getItem('cg_'+k))}catch{return null}},
+  s:(k,v)=>localStorage.setItem('cg_'+k,JSON.stringify(v)),
+  d:k=>localStorage.removeItem('cg_'+k)
+};
+function devId(){
+  let id=LS.g('did');
+  if(!id){id='D-'+Math.random().toString(36).substr(2,8).toUpperCase();LS.s('did',id);}
+  return id;
+}
+const DID=devId();
+
+/* ═══════════════════════════════════════════
+   ROUTING
+═══════════════════════════════════════════ */
+const SCRS=['lock','pend','main'];
+function SS(n){
+  SCRS.forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==n));
+  if(n==='main'){buildWallet();tick();}
+}
+
+function init(){
+  if(LS.g('ok')){ SS('main'); return; }
+  const pr=LS.g('pr');
+  if(pr){ showPend(pr); return; }
+  SS('lock');
+}
+
+/* ═══════════════════════════════════════════
+   WEB3FORMS — SEND REQUEST EMAIL
+═══════════════════════════════════════════ */
+async function sendRequest(){
+  const name=document.getElementById('rn').value.trim();
+  const contact=document.getElementById('rc').value.trim();
+  if(!name||!contact){toast('Remplissez tous les champs','er');return;}
+
+  if(W3F_KEY==='VOTRE_CLE_ICI'){
+    toast('Configurez W3F_KEY dans le fichier HTML','er');return;
+  }
+
+  const btn=document.getElementById('req-btn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span>Envoi en cours…';
+
+  const now=new Date();
+  const date=now.toLocaleDateString('fr-FR')+' à '+now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+
+  const body=`
+🆕 Nouvelle demande d'accès — Wallet Chogan
+
+👤 Nom       : ${name}
+📧 Contact   : ${contact}
+📱 Appareil  : ${DID}
+📅 Date      : ${date}
+
+─────────────────────────────
+Pour autoriser cette personne,
+partagez-lui le code : ${ACCESS_CODE}
+─────────────────────────────`;
+
+  try{
+    const r=await fetch('https://api.web3forms.com/submit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({
+        access_key: W3F_KEY,
+        to: ADMIN_EMAIL,
+        subject: `[Wallet Chogan] Demande d'accès — ${name}`,
+        message: body,
+        from_name: 'Wallet Chogan',
+        botcheck: ''
+      })
+    });
+    const d=await r.json();
+    if(d.success){
+      const req={name,contact,date,did:DID};
+      LS.s('pr',req);
+      toast('Email envoyé à l\'admin ✓','ok');
+      setTimeout(()=>showPend(req),700);
+    } else {
+      throw new Error(d.message||'Échec');
+    }
+  }catch(e){
+    toast('Erreur : '+e.message,'er');
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='📩 Envoyer la demande';
+  }
+}
+
+function showPend(req){
+  document.getElementById('pend-box').innerHTML=
+    `<strong>${req.name}</strong> · ${req.contact}<br>
+    <span style="font-size:10px;font-family:monospace;opacity:.45">${req.did} · ${req.date}</span>`;
+  SS('pend');
+}
+
+/* ═══════════════════════════════════════════
+   UNLOCK
+═══════════════════════════════════════════ */
+function tryUnlock(id){
+  const code=document.getElementById(id).value.trim().toUpperCase();
+  if(!code){toast('Entrez un code','er');return;}
+  if(code===ACCESS_CODE.toUpperCase()){
+    LS.s('ok',true); LS.d('pr');
+    toast('Accès autorisé — Bienvenue ! 🎉','ok');
+    setTimeout(()=>SS('main'),800);
+  } else {
+    toast('Code incorrect ✗','er');
+    document.getElementById(id).value='';
+  }
+}
+
+/* ═══════════════════════════════════════════
+   ADMIN PW
+═══════════════════════════════════════════ */
+function showAdminPw(){
+  document.getElementById('apov').classList.add('show');
+  setTimeout(()=>document.getElementById('apw').focus(),300);
+}
+function closeAdminPw(){
+  document.getElementById('apov').classList.remove('show');
+  document.getElementById('apw').value='';
+}
+function checkAdminPw(){
+  const v=document.getElementById('apw').value.trim().toUpperCase();
+  if(v===ACCESS_CODE.toUpperCase()){
+    closeAdminPw();
+    showAdminPanel();
+  } else {
+    toast('Code incorrect','er');
+    document.getElementById('apw').value='';
+  }
+}
+document.getElementById('apw').addEventListener('keydown',e=>{if(e.key==='Enter')checkAdminPw()});
+
+function showAdminPanel(){
+  // Build inline admin overlay
+  const reqs=JSON.parse(localStorage.getItem('cg_pr')||'null');
+  const old=document.getElementById('admin-overlay');
+  if(old) old.remove();
+
+  const ov=document.createElement('div');
+  ov.id='admin-overlay';
+  ov.style.cssText='position:fixed;inset:0;z-index:300;background:var(--bg);overflow-y:auto;display:flex;flex-direction:column';
+  ov.innerHTML=`
+    <div style="padding:calc(20px + var(--st)) 22px 16px;display:flex;align-items:center;gap:14px;border-bottom:0.5px solid rgba(255,255,255,.08);position:sticky;top:0;background:var(--bg);z-index:5">
+      <button onclick="document.getElementById('admin-overlay').remove()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center">←</button>
+      <div style="font-size:18px;font-weight:700">Panneau Admin</div>
+      <div style="margin-left:auto;padding:4px 12px;border-radius:20px;background:rgba(201,168,76,.15);border:0.5px solid rgba(201,168,76,.3);font-size:11px;font-weight:600;color:var(--gold)">ADMIN</div>
+    </div>
+    <div style="padding:22px">
+      <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Code maître</div>
+      <div style="background:rgba(201,168,76,.08);border:0.5px solid rgba(201,168,76,.25);border-radius:16px;padding:16px 20px;margin-bottom:10px">
+        <div style="font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--gold);margin-bottom:6px">Code d'accès à partager</div>
+        <div style="font-size:30px;font-weight:700;font-family:monospace;letter-spacing:.12em;color:var(--gold2)">${ACCESS_CODE}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:8px;line-height:1.5">Partagez ce code avec vos vendeurs. Pour le changer, modifiez ACCESS_CODE dans index.html</div>
+      </div>
+      <button onclick="navigator.clipboard.writeText('${ACCESS_CODE}').then(()=>{const b=this;b.textContent='✓ Copié !';setTimeout(()=>b.textContent='Copier le code',2000)})" style="width:100%;padding:12px;border-radius:12px;background:rgba(255,255,255,.06);border:0.5px solid rgba(255,255,255,.12);color:#fff;font-size:14px;cursor:pointer;font-family:inherit;margin-bottom:24px">Copier le code</button>
+
+      <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Configuration</div>
+      <div style="background:var(--card);border:0.5px solid rgba(255,255,255,.08);border-radius:16px;padding:14px 18px;margin-bottom:8px">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:3px">Email admin</div>
+        <div style="font-size:14px;font-weight:500">${ADMIN_EMAIL}</div>
+      </div>
+      <div style="background:var(--card);border:0.5px solid rgba(255,255,255,.08);border-radius:16px;padding:14px 18px;margin-bottom:24px">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:3px">Web3Forms</div>
+        <div style="font-size:13px;font-weight:500;font-family:monospace">${W3F_KEY==='VOTRE_CLE_ICI'?'⚠️ Non configuré':W3F_KEY.substr(0,8)+'••••••••'}</div>
+      </div>
+
+      <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Guide envoi code</div>
+      <div style="background:var(--card);border:0.5px solid rgba(255,255,255,.08);border-radius:16px;padding:16px 18px;margin-bottom:24px;font-size:13px;color:var(--muted);line-height:1.7">
+        Quand vous recevez un email de demande :<br>
+        1. Copiez le code <strong style="color:var(--gold2)">${ACCESS_CODE}</strong><br>
+        2. Répondez à l'email avec le code<br>
+        3. L'utilisateur entre le code → app débloquée ✅
+      </div>
+
+      <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Réinitialiser</div>
+      <button onclick="if(confirm('Réinitialiser les accès ?')){localStorage.removeItem('cg_ok');localStorage.removeItem('cg_pr');document.getElementById('admin-overlay').remove();SS('lock');toast('Réinitialisé','in')}" style="width:100%;padding:14px;border-radius:14px;background:transparent;border:0.5px solid rgba(255,80,80,.3);color:#ff5050;font-size:14px;cursor:pointer;font-family:inherit;margin-bottom:40px">
+        Réinitialiser l'accès de cet appareil
+      </button>
+    </div>`;
+  document.body.appendChild(ov);
+}
+
+// Avatar 5-tap shortcut
+let _at=0,_att=null;
+function avTap(){
+  _at++;clearTimeout(_att);_att=setTimeout(()=>_at=0,2000);
+  if(_at>=5){_at=0;showAdminPw();}
+}
+
+/* ═══════════════════════════════════════════
+   WALLET DATA
+═══════════════════════════════════════════ */
+const CARDS=[
+  {th:'t1',em:'🔢',cat:'Connaître les produits',nm:'Chiffres Clés',sl:'Concentration',sv:'30%',chip:'5 chiffres',r:80,g:130,b:255,
+   hero:{v:'30%',l:'Concentration en extrait de parfum'},flow:null,
+   items:[
+    {i:'30%',t:'30% d\'extrait de parfum',d:'Contre 12-15% chez les grandes marques. Concentration professionnelle.'},
+    {i:'24h',t:'8 à 24h de tenue',d:'Sur la peau grâce à la concentration élevée. Plus besoin de reappliquer.'},
+    {i:'-70',t:'-70% d\'économie',d:'En moyenne vs parfumeries. Exemple : 29€ ici vs 120€ en boutique.'},
+    {i:'0€',t:'Zéro budget publicité',d:'Pas d\'égérie, pas de campagne. L\'argent va dans les essences.',q:'« 100% qualité, 0% marketing »'},
+    {i:'🌹',t:'Essences de Grasse',d:'Fournisseur Fragworld — même source que les grandes maisons de luxe.',q:'« Chanel paie Grasse. Nous aussi. »'},
+   ]},
+  {th:'t2',em:'🧠',cat:'Psychologie client',nm:'SONCAS',sl:'Profils clients',sv:'6',chip:'Motivations',r:180,g:80,b:255,
+   hero:{v:'SONCAS',l:'Détecter la motivation, adapter le discours'},flow:null,
+   items:[
+    {i:'S',t:'Sécurité',d:'Certifié bio, non testé sur les animaux.',q:'« Vous pouvez y aller les yeux fermés »'},
+    {i:'O',t:'Orgueil',d:'Extrait de parfum = choix des connaisseurs.',q:'« Vous avez l\'œil pour la qualité »'},
+    {i:'N',t:'Nouveauté',d:'Concept exclusif, marque émergente.',q:'« Vous êtes parmi les premiers »'},
+    {i:'C',t:'Confort',d:'Test facile, livraison rapide, zéro engagement.'},
+    {i:'A',t:'Argent',d:'29€ pour un extrait = rapport qualité-prix imbattable.',q:'« Même odeur, prix différent »'},
+    {i:'S',t:'Sympathie',d:'Moment de plaisir et de conseil sans pression.'},
+   ]},
+  {th:'t3',em:'⚡',cat:'Structurer la vente',nm:'Q / PA / Si / Arg / Cl',sl:'Étapes',sv:'5',chip:'Séquence',r:30,g:200,b:120,
+   hero:{v:'5 étapes',l:'De l\'ouverture à la conclusion'},flow:['Q','PA','Si','Arg','Cl'],
+   items:[
+    {i:'Q',t:'Question — Ouvrir',d:'Lancer le dialogue naturellement.',q:'« C\'est quoi ton parfum actuel ? »'},
+    {i:'PA',t:'Alternative — Orienter',d:'Proposer 2 choix. Le cerveau choisit au lieu de refuser.',q:'« Floral ou boisé ? »'},
+    {i:'Si',t:'Supposition — Avancer',d:'Proposer sans forcer.',q:'« Si tu aimes le frais, j\'ai ce qu\'il te faut »'},
+    {i:'Ar',t:'Argument — Convaincre',d:'Un fait concret et précis.',q:'« 30% d\'essence — tenue 24h »'},
+    {i:'Cl',t:'Conclusion — Fermer',d:'Fermer sans laisser de silence.',q:'« Je t\'envoie le lien ? »'},
+   ]},
+  {th:'t4',em:'🎯',cat:'Augmenter le panier',nm:'Méthode PCA',sl:'Panier moyen',sv:'+30%',chip:'3 leviers',r:230,g:130,b:40,
+   hero:{v:'PCA',l:'Promo → Complément → Additionnel'},flow:null,
+   items:[
+    {i:'P',t:'Promo — Attaquer d\'emblée',d:'Offre pour capter l\'attention immédiatement.',q:'« 2 achetés = le 3ème à -50% »'},
+    {i:'C',t:'Complément — Après le OUI',d:'Proposer le produit assorti.',q:'« Et avec ça, le lait corporel ? »'},
+    {i:'A',t:'Additionnel — Ouvrir une porte',d:'Élargir vers d\'autres univers produits.',q:'« On a aussi des parfums d\'ambiance »'},
+   ]},
+  {th:'t5',em:'📊',cat:'Auto-évaluation',nm:'Autodiagnostic VAMP',sl:'Piliers',sv:'4',chip:'Performance',r:30,g:190,b:210,
+   hero:{v:'VAMP',l:'Évaluer sa performance sur 4 piliers'},flow:null,
+   items:[
+    {i:'V',t:'Vente',d:'Je propose systématiquement. Je persévère après un refus.'},
+    {i:'A',t:'Accueil',d:'Je souris naturellement. Je remercie toujours.'},
+    {i:'M',t:'Méthodes',d:'Je maîtrise les 5 chiffres. J\'utilise SONCAS.'},
+    {i:'P',t:'Personnalité',d:'Énergie, confiance, j\'ose proposer sans timidité.'},
+   ]},
+  {th:'t6',em:'🛡️',cat:'Gérer les résistances',nm:'Objections',sl:'Réponses',sv:'3+',chip:'NON→OUI',r:230,g:60,b:60,
+   hero:{v:'NON',l:'Signal d\'intérêt déguisé — Écouter · Reformuler · Argumenter'},flow:null,
+   items:[
+    {i:'?',t:'« C\'est de la contrefaçon ? »',d:'Essences de Grasse — même fournisseur que Chanel. Légal.',q:'« Légal, traçable, certifié »'},
+    {i:'⏱',t:'« Ça ne tient pas »',d:'30% d\'essence = tenue 8 à 24h.',q:'« Testez ce soir, jugez demain »'},
+    {i:'🕐',t:'« Pas le temps »',d:'Laisser un échantillon et une carte.',q:'« L\'odeur parle d\'elle-même »'},
+   ]},
+];
+
+/* ═══════════════════════════════════════════
+   WALLET ENGINE
+═══════════════════════════════════════════ */
+let cur=0,sy=0,drag=false,dd=0;
+const PEEK=16;
+let built=false;
+
+function buildWallet(){
+  if(built) return; built=true;
+  const se=document.getElementById('stack'), de=document.getElementById('dots');
+  CARDS.forEach((c,i)=>{
+    const el=document.createElement('div');
+    el.className='wcard '+c.th; el.id='wc'+i;
+    el.innerHTML=`<div class="ci">
+      <div class="cb1" style="width:160px;height:160px;background:rgba(${c.r},${c.g},${c.b},.9);top:-50px;right:-40px"></div>
+      <div class="cb2" style="width:80px;height:80px;background:rgba(${c.r},${c.g},${c.b},.8);bottom:-20px;left:30px"></div>
+      <div class="ct"><div><div class="ct-c">${c.cat}</div><div class="ct-n">${c.nm}</div></div><div class="ct-i">${c.em}</div></div>
+      <div class="cbx"><div><div class="cb-sl">${c.sl}</div><div class="cb-sv">${c.sv}</div></div>
+      <div class="cb-ch"><div class="cd" style="background:rgba(${c.r},${c.g},${c.b},.9)"></div>${c.chip}</div></div></div>`;
+    el.addEventListener('click',()=>{ if(i===cur&&Math.abs(dd)<6) openCard(c); else if(i!==cur) go(i); });
+    se.appendChild(el);
+    const d=document.createElement('div');
+    d.className='dot'+(i===0?' on':''); d.id='dt'+i; d.onclick=()=>go(i);
+    de.appendChild(d);
+  });
+  pos(false);
+}
+
+function pos(anim=true){
+  CARDS.forEach((_,i)=>{
+    const el=document.getElementById('wc'+i); if(!el) return;
+    const diff=i-cur;
+    let top,scale,opacity;
+    if(diff===0){top=14;scale=1;opacity=1}
+    else if(diff<0){top=-200;scale=1;opacity=0}
+    else{top=14+diff*PEEK;scale=1-diff*.04;opacity=diff<=3?1-diff*.2:0}
+    el.style.transition=anim?'top .42s cubic-bezier(.4,0,.2,1),transform .42s,opacity .32s':'none';
+    el.style.top=top+'px';el.style.transform=`scale(${scale})`;el.style.opacity=opacity;
+    el.style.zIndex=CARDS.length-Math.abs(i-cur);
+    const d=document.getElementById('dt'+i);
+    if(d) d.className='dot'+(i===cur?' on':'');
+  });
+}
+function go(i){ if(i<0||i>=CARDS.length)return; cur=i; pos(true); }
+
+const st=document.getElementById('stack');
+st.addEventListener('touchstart',e=>{sy=e.touches[0].clientY;drag=true;dd=0},{passive:true});
+st.addEventListener('touchmove',e=>{if(!drag)return;dd=e.touches[0].clientY-sy},{passive:true});
+st.addEventListener('touchend',()=>{
+  if(!drag)return;drag=false;
+  if(dd<-50&&cur<CARDS.length-1)go(cur+1);
+  else if(dd>50&&cur>0)go(cur-1);
+  dd=0;
+});
+
+function openCard(c){
+  const {r,g,b}=c;
+  const ib=`rgba(${r},${g},${b},.15)`;
+  const ic=`rgb(${Math.min(255,r+60)},${Math.min(255,g+60)},${Math.min(255,b+60)})`;
+  let flow='';
+  if(c.flow) flow=`<div class="fpills">${c.flow.map((s,i)=>`<span class="fp">${s}</span>${i<c.flow.length-1?'<span class="fa">›</span>':''}`).join('')}</div>`;
+  const rows=c.items.map((it,i)=>`
+    <div class="si" style="animation-delay:${i*.05}s">
+      <div class="sii" style="background:${ib};color:${ic}">${it.i}</div>
+      <div><div class="sit">${it.t}</div><div class="sid">${it.d}</div>
+      ${it.q?`<div class="siq" style="border-color:${ic}">${it.q}</div>`:''}</div>
+    </div>`).join('');
+  document.getElementById('sc').innerHTML=`
+    <div class="shcard ${c.th}">
+      <div class="cb1" style="width:130px;height:130px;background:rgba(${r},${g},${b},.9);top:-30px;right:-30px"></div>
+      <div class="sht"><div class="shname">${c.nm}</div><div class="shemo">${c.em}</div></div>
+      <div class="shhv">${c.hero.v}</div><div class="shhl">${c.hero.l}</div>
+    </div>${flow}<div class="shbody">${rows}</div>`;
+  document.getElementById('dpanel').classList.add('open');
+}
+function cls(){ document.getElementById('dpanel').classList.remove('open'); }
+const ds2=document.getElementById('dsheet');
+let dsy=0;
+ds2.addEventListener('touchstart',e=>{dsy=e.touches[0].clientY},{passive:true});
+ds2.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-dsy>80)cls()},{passive:true});
+
+/* ═══════════════════════════════════════════
+   CLOCK & TOAST
+═══════════════════════════════════════════ */
+function tick(){
+  const n=new Date(),el=document.getElementById('clk');
+  if(el)el.textContent=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');
+}
+tick();setInterval(tick,15000);
+
+let tt=null;
+function toast(msg,type='in'){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='show t-'+type;
+  clearTimeout(tt);tt=setTimeout(()=>el.className='',3200);
+}
+
+/* ═══════════════════════════════════════════
+   KEY LISTENERS
+═══════════════════════════════════════════ */
+document.getElementById('uc').addEventListener('keydown',e=>{if(e.key==='Enter')tryUnlock('uc')});
+document.getElementById('pc').addEventListener('keydown',e=>{if(e.key==='Enter')tryUnlock('pc')});
+document.addEventListener('touchstart',()=>{
+  const h=document.getElementById('hint');if(h)h.style.opacity='0';
+},{once:true,passive:true});
+
+/* ═══════════════════════════════════════════
+   START
+═══════════════════════════════════════════ */
+init();
+</script>
+</body>
+</html>
