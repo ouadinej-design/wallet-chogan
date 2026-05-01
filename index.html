@@ -464,12 +464,50 @@ function tryUnlock(id){
   if(!code){toast('Entrez un code','er');return;}
   if(code===ACCESS_CODE.toUpperCase()){
     LS.s('ok',true); LS.d('pr');
-    toast('Accès autorisé — Bienvenue ! 🎉','ok');
-    setTimeout(()=>SS('main'),800);
+    toast('Accès autorisé ! 🎉','ok');
+    setTimeout(()=>askConsultantName(),600);
   } else {
     toast('Code incorrect ✗','er');
     document.getElementById(id).value='';
   }
+}
+
+/* ═══════════════════════════════════════════
+   IDENTITÉ CONSULTANTE
+═══════════════════════════════════════════ */
+function askConsultantName(){
+  // If already has a name saved, go straight to main
+  if(LS.g('consultant_name')){ SS('main'); return; }
+
+  const ov=document.createElement('div');
+  ov.id='name-overlay';
+  ov.style.cssText='position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);display:flex;align-items:flex-end;justify-content:center';
+  ov.innerHTML=`
+    <div style="background:#1a1a26;border-radius:26px 26px 0 0;padding:28px 22px calc(32px + var(--sb));width:100%;max-width:480px;border-top:0.5px solid rgba(255,255,255,.12)">
+      <div style="width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.18);margin:0 auto 22px"></div>
+      <div style="font-size:22px;margin-bottom:6px">👋</div>
+      <div style="font-size:19px;font-weight:700;margin-bottom:6px">Bienvenue !</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:22px;line-height:1.5">Pour personnaliser votre expérience, entrez votre prénom. Il sera utilisé pour le suivi des consultations.</div>
+      <label style="font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.48);margin-bottom:6px;display:block">Votre prénom</label>
+      <input id="cn-input" class="finput" type="text" placeholder="Prénom" style="margin-bottom:0" autocomplete="given-name">
+      <button class="btn-g" onclick="saveConsultantName()" style="margin-top:14px">Continuer →</button>
+    </div>`;
+  document.body.appendChild(ov);
+  setTimeout(()=>document.getElementById('cn-input').focus(), 400);
+  document.getElementById('cn-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveConsultantName()});
+}
+
+function saveConsultantName(){
+  const name=document.getElementById('cn-input').value.trim();
+  if(!name){ toast('Entrez votre prénom','er'); return; }
+  LS.s('consultant_name', name);
+  const ov=document.getElementById('name-overlay');
+  if(ov) ov.remove();
+  SS('main');
+}
+
+function getConsultantName(){
+  return LS.g('consultant_name') || 'Inconnue';
 }
 
 /* ═══════════════════════════════════════════
@@ -498,12 +536,41 @@ document.getElementById('apw').addEventListener('keydown',e=>{if(e.key==='Enter'
 function buildHistoRows(){
   const hist=LS.g('hist')||[];
   const TC={t1:'#1a3380',t2:'#4a1580',t3:'#0e5c3a',t4:'#7a3010',t5:'#0b5060',t6:'#7a1010'};
-  if(!hist.length) return '<div style="padding:20px;text-align:center;color:rgba(255,255,255,.35);font-size:13px">Aucune consultation enregistrée</div>';
-  return hist.slice(0,10).map(e=>`
-    <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:0.5px solid rgba(255,255,255,.06)">
-      <div style="width:36px;height:36px;border-radius:10px;background:${TC[e.th]||'#1a1a2a'};display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">${e.em}</div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">${e.nm}</div><div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:1px">${e.date} · ${e.time}</div></div>
-    </div>`).join('') + (hist.length>10?`<div style="padding:10px 16px;font-size:11px;color:rgba(255,255,255,.3);text-align:center">+${hist.length-10} autres consultations</div>`:'');
+  if(!hist.length) return '<div style="padding:24px;text-align:center;color:rgba(255,255,255,.3);font-size:13px">📋<br><br>Aucune consultation enregistrée</div>';
+
+  // Group by consultant name for summary
+  const byName={};
+  hist.forEach(e=>{
+    const n=e.consultant||'Inconnue';
+    if(!byName[n]) byName[n]=0;
+    byName[n]++;
+  });
+
+  const summary = Object.entries(byName).map(([name,count])=>
+    `<span style="display:inline-flex;align-items:center;gap:5px;background:rgba(201,168,76,.1);border:0.5px solid rgba(201,168,76,.2);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;color:#c9a84c;margin:0 4px 4px 0">
+      👤 ${name} <span style="opacity:.6">${count}</span>
+    </span>`
+  ).join('');
+
+  const rows = hist.map((e,i)=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:0.5px solid rgba(255,255,255,.05)">
+      <div style="width:34px;height:34px;border-radius:9px;background:${TC[e.th]||'#1a1a2a'};display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${e.em}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.nm}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:2px">
+          <span style="font-size:11px;font-weight:600;color:#c9a84c">👤 ${e.consultant||'Inconnue'}</span>
+          <span style="font-size:10px;color:rgba(255,255,255,.3)">·</span>
+          <span style="font-size:11px;color:rgba(255,255,255,.35)">${e.date} ${e.time}</span>
+        </div>
+      </div>
+    </div>`).join('');
+
+  return `<div style="padding:12px 16px 8px;border-bottom:0.5px solid rgba(255,255,255,.06)">
+      <div style="font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px">Consultantes actives</div>
+      <div style="display:flex;flex-wrap:wrap">${summary}</div>
+    </div>${rows}`;
 }
 
 function showAdminPanel(){
@@ -549,9 +616,10 @@ function showAdminPanel(){
       </div>
 
       <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Historique des consultations</div>
-      <div style="background:var(--card);border:0.5px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;margin-bottom:24px" id="admin-histo-wrap">
+      <div style="background:var(--card);border:0.5px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;margin-bottom:8px" id="admin-histo-wrap">
         <span id='histo-rows-placeholder'></span>
       </div>
+      <button onclick="if(confirm('Effacer tout l\'historique ?')){LS.d('hist');const ph=document.getElementById('admin-histo-wrap');if(ph)ph.innerHTML=buildHistoRows();toast('Historique effacé','in')}" style="width:100%;padding:10px;border-radius:12px;background:rgba(255,80,80,.07);border:0.5px solid rgba(255,80,80,.2);color:#ff7070;font-size:12px;cursor:pointer;font-family:inherit;margin-bottom:24px">Effacer l'historique</button>
       <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Réinitialiser</div>
       <button onclick="if(confirm('Réinitialiser les accès ?')){localStorage.removeItem('cg_ok');localStorage.removeItem('cg_pr');document.getElementById('admin-overlay').remove();SS('lock');toast('Réinitialisé','in')}" style="width:100%;padding:14px;border-radius:14px;background:transparent;border:0.5px solid rgba(255,80,80,.3);color:#ff5050;font-size:14px;cursor:pointer;font-family:inherit;margin-bottom:40px">
         Réinitialiser l'accès de cet appareil
@@ -764,10 +832,13 @@ function showInfo(){
 function addHistory(card){
   const hist=LS.g('hist')||[];
   const now=new Date();
-  hist.unshift({nm:card.nm,em:card.em,th:card.th,
+  hist.unshift({
+    nm:card.nm, em:card.em, th:card.th,
+    consultant: getConsultantName(),
     time:now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),
-    date:now.toLocaleDateString('fr-FR')});
-  if(hist.length>30) hist.pop();
+    date:now.toLocaleDateString('fr-FR')
+  });
+  if(hist.length>100) hist.pop();
   LS.s('hist',hist);
 }
 
