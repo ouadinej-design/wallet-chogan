@@ -312,12 +312,41 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
     <div class="s-ico">▲▲▲ WiFi 🔋</div>
   </div>
   <div class="wh">
-    <div><div class="wh-b">Wallet Chogan</div><div class="wh-t">Guide de Vente</div></div>
+    <div><div class="wh-b">Wallet Chogan</div><div class="wh-t" id="wh-title">Catalogue</div></div>
     <div class="wh-av" id="av" onclick="avTap()">WC<div class="av-dot"></div></div>
   </div>
   <div class="stack" id="stack"></div>
   <div class="hint" id="hint">Glissez ↕ pour naviguer · Appuyez pour ouvrir</div>
   <div class="dots" id="dots"></div>
+  <div class="bnav">
+    <div class="ni on">
+      <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      Cartes
+    </div>
+    <div class="ni" onclick="showInfo()">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Infos
+    </div>
+  </div>
+</div>
+
+<!-- SUB-WALLET SCREEN -->
+<div id="sub-screen" style="position:fixed;inset:0;z-index:40;background:var(--bg);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .42s cubic-bezier(.4,0,.2,1)">
+  <div class="status">
+    <div class="s-time" id="sub-clk">--:--</div>
+    <div class="s-ico">▲▲▲ WiFi 🔋</div>
+  </div>
+  <div style="padding:4px 16px 4px;display:flex;align-items:center;gap:12px;flex-shrink:0">
+    <button onclick="closeCategory()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">←</button>
+    <div>
+      <div class="wh-b" id="sub-brand">Wallet Chogan</div>
+      <div class="wh-t" id="sub-title">Catégorie</div>
+    </div>
+    <div class="wh-av" style="margin-left:auto" id="av2" onclick="avTap()">WC<div class="av-dot"></div></div>
+  </div>
+  <div class="stack" id="sub-stack"></div>
+  <div class="hint" id="sub-hint">Glissez ↕ pour naviguer · Appuyez pour ouvrir</div>
+  <div class="dots" id="sub-dots"></div>
   <div class="bnav">
     <div class="ni on">
       <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
@@ -373,7 +402,7 @@ const DID=devId();
 const SCRS=['lock','pend','main'];
 function SS(n){
   SCRS.forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==n));
-  if(n==='main'){buildWallet();tick();}
+  if(n==='main'){buildWallet();tick(); const ss=document.getElementById('sub-screen'); if(ss) ss.style.display='none';}
 }
 
 function init(){
@@ -602,177 +631,574 @@ function avTap(){
 /* ═══════════════════════════════════════════
    WALLET DATA
 ═══════════════════════════════════════════ */
-const CARDS=[
-  {th:'t1',em:'🔢',cat:'Connaître les produits',nm:'Chiffres Clés',sl:'Concentration',sv:'30%',chip:'5 chiffres',r:80,g:130,b:255,
-   hero:{v:'30%',l:'Concentration en extrait de parfum'},flow:null,
-   items:[
-    {i:'30%',t:'30% d\'extrait de parfum',d:'Contre 12-15% chez les grandes marques. Concentration professionnelle.'},
-    {i:'24h',t:'8 à 24h de tenue',d:'Sur la peau grâce à la concentration élevée. Plus besoin de reappliquer.'},
-    {i:'-70',t:'-70% d\'économie',d:'En moyenne vs parfumeries. Exemple : 29€ ici vs 120€ en boutique.'},
-    {i:'0€',t:'Zéro budget publicité',d:'Pas d\'égérie, pas de campagne. L\'argent va dans les essences.',q:'« 100% qualité, 0% marketing »'},
-    {i:'🌹',t:'Essences de Grasse',d:'Fournisseur Fragworld — même source que les grandes maisons de luxe.',q:'« Chanel paie Grasse. Nous aussi. »'},
+const CATEGORIES=[
+  /* ── 1. GUIDE DE VENTE ── */
+  {th:'t1',em:'📊',nm:'Guide de Vente',sub:'Techniques & méthodes',chip:'6 modules',r:80,g:130,b:255,
+   cards:[
+    {th:'t1',em:'🔢',cat:'Guide de Vente',nm:'Chiffres Clés',sl:'Concentration',sv:'30%',chip:'5 chiffres',r:80,g:130,b:255,
+     hero:{v:'30%',l:'Concentration en extrait de parfum'},flow:null,
+     items:[
+      {i:'30%',t:'30% d'extrait de parfum',d:'Contre 12-15% chez les grandes marques. Concentration professionnelle.'},
+      {i:'24h',t:'8 à 24h de tenue',d:'Grâce à la concentration élevée. Plus besoin de reappliquer.'},
+      {i:'-70',t:'-70% d'économie',d:'En moyenne vs parfumeries. Exemple : 29€ ici vs 120€ en boutique.'},
+      {i:'0€',t:'Zéro budget publicité',d:'L'argent va dans les essences, pas la communication.',q:'« 100% qualité, 0% marketing »'},
+      {i:'🌹',t:'Essences de Grasse',d:'Fournisseur Fragworld — même source que les maisons de luxe.',q:'« Chanel paie Grasse. Nous aussi. »'},
+     ]},
+    {th:'t2',em:'🧠',cat:'Guide de Vente',nm:'SONCAS',sl:'Profils clients',sv:'6',chip:'Motivations',r:180,g:80,b:255,
+     hero:{v:'SONCAS',l:'Détecter la motivation, adapter le discours'},flow:null,
+     items:[
+      {i:'S',t:'Sécurité',d:'Certifié bio, non testé sur les animaux.',q:'« Vous pouvez y aller les yeux fermés »'},
+      {i:'O',t:'Orgueil',d:'Extrait de parfum = choix des connaisseurs.',q:'« Vous avez l'œil »'},
+      {i:'N',t:'Nouveauté',d:'Concept exclusif, marque émergente.',q:'« Vous êtes parmi les premiers »'},
+      {i:'C',t:'Confort',d:'Test facile, livraison rapide, zéro engagement.'},
+      {i:'A',t:'Argent',d:'29€ pour un extrait = rapport imbattable.',q:'« Même odeur, prix différent »'},
+      {i:'S',t:'Sympathie',d:'Moment de plaisir et de conseil sans pression.'},
+     ]},
+    {th:'t3',em:'⚡',cat:'Guide de Vente',nm:'Q / PA / Si / Arg / Cl',sl:'Étapes',sv:'5',chip:'Séquence',r:30,g:200,b:120,
+     hero:{v:'5 étapes',l:'De l'ouverture à la conclusion'},flow:['Q','PA','Si','Arg','Cl'],
+     items:[
+      {i:'Q',t:'Question — Ouvrir',d:'Lancer le dialogue naturellement.',q:'« C'est quoi ton parfum actuel ? »'},
+      {i:'PA',t:'Alternative — Orienter',d:'2 choix. Le cerveau choisit au lieu de refuser.',q:'« Floral ou boisé ? »'},
+      {i:'Si',t:'Supposition — Avancer',d:'Proposer sans forcer.',q:'« Si tu aimes le frais, j'ai ce qu'il te faut »'},
+      {i:'Ar',t:'Argument — Convaincre',d:'Un fait concret et précis.',q:'« 30% d'essence — tenue 24h »'},
+      {i:'Cl',t:'Conclusion — Fermer',d:'Fermer sans laisser de silence.',q:'« Je t'envoie le lien ? »'},
+     ]},
+    {th:'t4',em:'🎯',cat:'Guide de Vente',nm:'Méthode PCA',sl:'Panier moyen',sv:'+30%',chip:'3 leviers',r:230,g:130,b:40,
+     hero:{v:'PCA',l:'Promo → Complément → Additionnel'},flow:null,
+     items:[
+      {i:'P',t:'Promo — Attaquer',d:'Toujours commencer par une offre.',q:'« 2 achetés = le 3ème à -50% »'},
+      {i:'C',t:'Complément — Après le OUI',d:'Proposer le produit assorti.',q:'« Et avec ça, le lait corporel ? »'},
+      {i:'A',t:'Additionnel — Ouvrir',d:'Élargir vers d'autres produits.',q:'« On a aussi des parfums d'ambiance »'},
+     ]},
+    {th:'t5',em:'📋',cat:'Guide de Vente',nm:'Autodiagnostic VAMP',sl:'Piliers',sv:'4',chip:'Performance',r:30,g:190,b:210,
+     hero:{v:'VAMP',l:'Évaluer sa performance sur 4 piliers'},flow:null,
+     items:[
+      {i:'V',t:'Vente',d:'Je propose systématiquement. Je persévère.'},
+      {i:'A',t:'Accueil',d:'Je souris naturellement. Je remercie toujours.'},
+      {i:'M',t:'Méthodes',d:'Je maîtrise les 5 chiffres. J'utilise SONCAS.'},
+      {i:'P',t:'Personnalité',d:'Énergie, confiance, j'ose proposer.'},
+     ]},
+    {th:'t6',em:'🛡️',cat:'Guide de Vente',nm:'Objections',sl:'Réponses',sv:'3+',chip:'NON→OUI',r:230,g:60,b:60,
+     hero:{v:'NON',l:'Signal d'intérêt — Écouter · Reformuler · Argumenter'},flow:null,
+     items:[
+      {i:'?',t:'« C'est de la contrefaçon ? »',d:'Essences de Grasse — même fournisseur que Chanel. Légal.',q:'« Légal, traçable, certifié »'},
+      {i:'⏱',t:'« Ça ne tient pas »',d:'30% d'essence = tenue 8 à 24h.',q:'« Testez ce soir, jugez demain »'},
+      {i:'🕐',t:'« Pas le temps »',d:'Laisser un échantillon et une carte.',q:'« L'odeur parle d'elle-même »'},
+     ]},
    ]},
-  {th:'t2',em:'🧠',cat:'Psychologie client',nm:'SONCAS',sl:'Profils clients',sv:'6',chip:'Motivations',r:180,g:80,b:255,
-   hero:{v:'SONCAS',l:'Détecter la motivation, adapter le discours'},flow:null,
-   items:[
-    {i:'S',t:'Sécurité',d:'Certifié bio, non testé sur les animaux.',q:'« Vous pouvez y aller les yeux fermés »'},
-    {i:'O',t:'Orgueil',d:'Extrait de parfum = choix des connaisseurs.',q:'« Vous avez l\'œil pour la qualité »'},
-    {i:'N',t:'Nouveauté',d:'Concept exclusif, marque émergente.',q:'« Vous êtes parmi les premiers »'},
-    {i:'C',t:'Confort',d:'Test facile, livraison rapide, zéro engagement.'},
-    {i:'A',t:'Argent',d:'29€ pour un extrait = rapport qualité-prix imbattable.',q:'« Même odeur, prix différent »'},
-    {i:'S',t:'Sympathie',d:'Moment de plaisir et de conseil sans pression.'},
+
+  /* ── 2. PARFUMERIE OLFAZETA ── */
+  {th:'t2',em:'🌹',nm:'Parfumerie Olfazeta',sub:'Femme · Homme · Enfant · Mixte',chip:'Parfums',r:200,g:80,b:200,
+   cards:[
+    {th:'t2',em:'🌸',cat:'Parfumerie',nm:'Parfums Femme',sl:'Collection',sv:'Féminin',chip:'Femme',r:200,g:80,b:200,
+     hero:{v:'Femme',l:'Fragrances féminines · Grasse · FragWorld'},flow:null,
+     items:[
+      {i:'🌸',t:'Gamme florale',d:'Rose, jasmin, pivoine — les féminins légers et raffinés pour le quotidien.',q:'« Légèreté et élégance »'},
+      {i:'🍊',t:'Gamme fruitée',d:'Notes de bergamote, pêche, litchi — fraîcheur et vitalité pour toutes saisons.',q:'« Fraîcheur et gourmandise »'},
+      {i:'🌙',t:'Gamme orientale',d:'Oud, ambre, vanille — les parfums envoûtants et sensuels pour les soirées.',q:'« Mystère et séduction »'},
+      {i:'💎',t:'Gamme prestige',d:'Inspirations des plus grands : Chanel N°5, Miss Dior, La Vie est Belle... à -70%.',q:'« Le luxe accessible »'},
+      {i:'30%',t:'Argument clé',d:'30% d'extrait = sillage intense et longue tenue. Appliquer sur les points de chaleur.',q:'« Appliquez sur le cou et les poignets »'},
+      {i:'💶',t:'Prix & Positionnement',d:'29€ en moyenne pour une tenue 8-24h. Proposer la gamme comme alternative intelligente.',q:'« Même odeur, pas le même prix »'},
+     ]},
+    {th:'t1',em:'🧔',cat:'Parfumerie',nm:'Parfums Homme',sl:'Collection',sv:'Masculin',chip:'Homme',r:80,g:130,b:255,
+     hero:{v:'Homme',l:'Fragrances masculines · Boisé · Aromatique · Aquatique'},flow:null,
+     items:[
+      {i:'🌲',t:'Gamme boisée',d:'Cèdre, vétiver, patchouli — les masculins profonds et élégants pour toutes occasions.',q:'« Force et caractère »'},
+      {i:'🌊',t:'Gamme aquatique',d:'Notes marines et fraîches — idéal pour le sport, le bureau, les journées actives.',q:'« Fraîcheur toute la journée »'},
+      {i:'🌿',t:'Gamme aromatique',d:'Lavande, menthe, eucalyptus — les classiques intemporels et polyvalents.',q:'« Le classique indémodable »'},
+      {i:'💎',t:'Gamme prestige',d:'Inspirations Dior Sauvage, Bleu de Chanel, Armani Code... à prix Chogan.',q:'« Le prestige sans se ruiner »'},
+      {i:'🎁',t:'Idée cadeau homme',d:'Les parfums homme se vendent très bien pour Noël, fête des pères, anniversaires.',q:'« Le cadeau qui fait toujours effet »'},
+      {i:'⏱',t:'Tenue & Application',d:'30% d'extrait — tenue garantie 8-24h. Appliquer sur la peau, pas sur les vêtements.',q:'« Sur la peau uniquement »'},
+     ]},
+    {th:'t3',em:'👶',cat:'Parfumerie',nm:'Parfums Enfant',sl:'Collection',sv:'Doux',chip:'Enfant',r:30,g:180,b:120,
+     hero:{v:'Enfant',l:'Fragrances douces · Hypoallergéniques'},flow:null,
+     items:[
+      {i:'🌸',t:'Formulation douce',d:'Fragrances spécialement conçues pour la peau délicate des enfants. Testées dermatologiquement.',q:'« Douceur et sécurité »'},
+      {i:'🛡️',t:'Hypoallergénique',d:'Sans composants allergènes. Idéal pour les peaux sensibles et les enfants à peau réactive.',q:'« Sécurité garantie »'},
+      {i:'🍓',t:'Notes gourmandes',d:'Fraise, vanille, pomme — des fragrances joyeuses et pétillantes que les enfants adorent.',q:'« Les parfums qu'ils choisiraient »'},
+      {i:'🎒',t:'Usage quotidien',d:'Parfaits pour l'école, les activités et les occasions spéciales. Légers et discrets.',q:'« Pour chaque journée »'},
+      {i:'🎁',t:'Cadeau idéal',d:'Format et prix parfaits pour les cadeaux d'anniversaire et de fête. Se vend par lot facilement.',q:'« Le cadeau enfant sans se tromper »'},
+      {i:'👨‍👩‍👧',t:'Vente famille',d:'Proposer systématiquement quand un parent achète son parfum. "Et pour votre enfant ?".',q:'« Toute la famille sent bon »'},
+     ]},
+    {th:'t5',em:'✨',cat:'Parfumerie',nm:'Parfums Mixtes',sl:'Collection',sv:'Unisexe',chip:'Mixte',r:30,g:190,b:210,
+     hero:{v:'Mixte',l:'Fragrances unisexes · Moderne · Tendance'},flow:null,
+     items:[
+      {i:'🌿',t:'Tendance unisexe',d:'Le marché des parfums unisexes est en forte croissance. Clientèle moderne et ouverte.',q:'« La tendance qui s'impose »'},
+      {i:'🪵',t:'Boisés légers',d:'Santal, cèdre doux, bambou — des fragrances sobres et élégantes sans genre défini.',q:'« L'élégance universelle »'},
+      {i:'🌊',t:'Aquatiques frais',d:'Notes marines et végétales — portés aussi bien par les femmes que les hommes.',q:'« Fresh et moderne »'},
+      {i:'🍋',t:'Hespéridés vifs',d:'Bergamote, citron, pamplemousse — vivants, jeunes et adaptés à tous.',q:'« L'énergie en flacon »'},
+      {i:'🎁',t:'Cadeau universel',d:'Le parfum mixte = le cadeau idéal quand on ne connaît pas les goûts. Zéro risque d'erreur.',q:'« Le cadeau qui convient à tous »'},
+      {i:'💡',t:'Conseil vente',d:'Proposer en premier le flacon mixte pour les indécis ou les achats cadeaux rapides.',q:'« Pour être sûr de faire plaisir »'},
+     ]},
+    {th:'t4',em:'🏺',cat:'Parfumerie',nm:'Essences de Grasse',sl:'Origine',sv:'FragWorld',chip:'Qualité',r:220,g:130,b:40,
+     hero:{v:'Grasse',l:'Capital mondial du parfum · Fournisseur FragWorld'},flow:null,
+     items:[
+      {i:'🌍',t:'Grasse — Capital mondial',d:'Grasse dans les Alpes-Maritimes est la capitale mondiale du parfum depuis le XVIe siècle.',q:'« Là où naissent les plus grands parfums »'},
+      {i:'🏭',t:'FragWorld — notre fournisseur',d:'Chogan s'approvisionne chez FragWorld à Grasse — le même fournisseur que Chanel, Dior, Hermès.',q:'« Même source que les grandes maisons »'},
+      {i:'🌹',t:'Qualité des essences',d:'Essences naturelles et de synthèse de qualité premium. Même matières premières, procédés identiques.',q:'« Qualité luxe, prix Chogan »'},
+      {i:'🔬',t:'30% de concentration',d:'Grâce à la qualité des essences, Chogan peut proposer 30% d'extrait contre 12-15% ailleurs.',q:'« Plus de concentration = plus de tenue »'},
+      {i:'💰',t:'Pourquoi moins cher ?',d:'Pas d'égéries (millions €), pas de pub TV, pas de packaging luxe inutile. Tout va dans le flacon.',q:'« Marketing zéro, qualité maximale »'},
+      {i:'✅',t:'Argument anti-contrefaçon',d:'Légal, traçable, certifié. Inspiration légale — comme Zara inspire les maisons de mode.',q:'« Inspiration légale, pas de contrefaçon »'},
+     ]},
+    {th:'t6',em:'🧴',cat:'Parfumerie',nm:'Parfums d'Ambiance',sl:'Intérieur',sv:'Maison',chip:'Ambiance',r:180,g:60,b:60,
+     hero:{v:'Ambiance',l:'Parfums d'intérieur · Diffuseurs · Spray'},flow:null,
+     items:[
+      {i:'🏠',t:'Parfums intérieur',d:'Sprays et diffuseurs pour la maison. Mêmes essences qualité Grasse pour votre chez-vous.',q:'« Votre maison sent bon Chogan »'},
+      {i:'🕯️',t:'Bougies parfumées',d:'Collection de bougies parfumées longue durée. Ambiance et senteur en une seule pièce.',q:'« Lumière et parfum réunis »'},
+      {i:'🚗',t:'Parfums voiture',d:'Diffuseurs voiture avec les fragrances Chogan. Proposer systématiquement après une vente parfum.',q:'« Votre voiture aussi ? »'},
+      {i:'🎁',t:'Vente additionnelle',d:'Les parfums d'ambiance sont la meilleure vente additionnelle en fin de transaction.',q:'« Et pour votre maison ? »'},
+      {i:'📦',t:'Pack maison',d:'Proposer un pack : parfum + ambiance + voiture. Panier triplé, une seule conversation.',q:'« Le kit complet pour 60€ »'},
+      {i:'💡',t:'Conseil',d:'Toujours faire sentir avant d'expliquer. L'odeur vend mieux que n'importe quel argument.',q:'« Sentez d'abord, décidez ensuite »'},
+     ]},
    ]},
-  {th:'t3',em:'⚡',cat:'Structurer la vente',nm:'Q / PA / Si / Arg / Cl',sl:'Étapes',sv:'5',chip:'Séquence',r:30,g:200,b:120,
-   hero:{v:'5 étapes',l:'De l\'ouverture à la conclusion'},flow:['Q','PA','Si','Arg','Cl'],
-   items:[
-    {i:'Q',t:'Question — Ouvrir',d:'Lancer le dialogue naturellement.',q:'« C\'est quoi ton parfum actuel ? »'},
-    {i:'PA',t:'Alternative — Orienter',d:'Proposer 2 choix. Le cerveau choisit au lieu de refuser.',q:'« Floral ou boisé ? »'},
-    {i:'Si',t:'Supposition — Avancer',d:'Proposer sans forcer.',q:'« Si tu aimes le frais, j\'ai ce qu\'il te faut »'},
-    {i:'Ar',t:'Argument — Convaincre',d:'Un fait concret et précis.',q:'« 30% d\'essence — tenue 24h »'},
-    {i:'Cl',t:'Conclusion — Fermer',d:'Fermer sans laisser de silence.',q:'« Je t\'envoie le lien ? »'},
+
+  /* ── 3. SOIN CORPS AURODHEA ── */
+  {th:'t3',em:'🐌',nm:'Soin Corps Aurodhea',sub:'Bave d'escargot · Aloe vera · Argan',chip:'Cosmétiques',r:40,g:190,b:130,
+   cards:[
+    {th:'t3',em:'🐌',cat:'Aurodhea',nm:'Bave d'Escargot',sl:'Action',sv:'Anti-âge',chip:'Réparateur',r:40,g:190,b:130,
+     hero:{v:'Bave',l:'Crèmes · Shampoings · Soins réparateurs'},flow:null,
+     items:[
+      {i:'🔬',t:'Pourquoi ça marche ?',d:'La bave d'escargot est riche en allantoïne, collagène et élastine. Action prouvée sur la régénération cellulaire.',q:'« La science derrière le miracle »'},
+      {i:'✨',t:'Anti-âge & rides',d:'Réduit les rides superficielles et améliore l'élasticité de la peau en 4 semaines.',q:'« Visible en 4 semaines »'},
+      {i:'🩹',t:'Cicatrisant naturel',d:'Idéal pour les cicatrices d'acné, vergetures et petites imperfections cutanées.',q:'« Peau neuve naturellement »'},
+      {i:'💆',t:'Crème visage',d:'Application matin et soir après nettoyage. S'adapte à tous les types de peau.',q:'« Mon soin matin et soir »'},
+      {i:'🧴',t:'Shampoing bave',d:'Fortifie le cheveu, réduit la chute et stimule la croissance. Résultats visibles en 3 semaines.',q:'« Des cheveux renforcés »'},
+      {i:'💡',t:'Argument de vente',d:'Citer des avant/après. Proposer un test sur la main. Le toucher vend mieux que les mots.',q:'« Essayez sur le dos de la main »'},
+     ]},
+    {th:'t5',em:'🌿',cat:'Aurodhea',nm:'Aloe Vera',sl:'Hydratation',sv:'Pure',chip:'Apaisant',r:30,g:190,b:210,
+     hero:{v:'Aloe',l:'Gels · Dentifrices · Soins hydratants'},flow:null,
+     items:[
+      {i:'💧',t:'Gel pur aloe vera',d:'Hydratation intense, apaisant pour les coups de soleil, irritations et peaux sèches.',q:'« Le multi-usage naturel »'},
+      {i:'🦷',t:'Dentifrice aloe',d:'Dentifrice naturel à l'aloe vera. Blanchissant doux, anti-bactérien, sans fluor agressif.',q:'« Sourire sain au naturel »'},
+      {i:'🌱',t:'Après-soleil',d:'Le gel aloe vera est l'après-soleil naturel par excellence. Rafraîchit et répare immédiatement.',q:'« Après le soleil, aloe vera »'},
+      {i:'🧴',t:'Soin cheveux',d:'Masque capillaire à l'aloe vera pour les cheveux secs, abîmés ou colorés.',q:'« Cheveux nourris en profondeur »'},
+      {i:'🤰',t:'Vergetures',d:'L'aloe vera prévient et réduit les vergetures. Idéal grossesse et fluctuations de poids.',q:'« Le soin prévention »'},
+      {i:'💡',t:'Argument',d:'L'aloe vera est connu et reconnu. Argument facile à porter : naturel, polyvalent, sans effets secondaires.',q:'« Naturel et prouvé depuis des siècles »'},
+     ]},
+    {th:'t4',em:'✨',cat:'Aurodhea',nm:'Huile d'Argan',sl:'Nutrition',sv:'Argan pur',chip:'Or liquide',r:220,g:130,b:40,
+     hero:{v:'Argan',l:'L'or liquide du Maroc · Cheveux · Peau'},flow:null,
+     items:[
+      {i:'🌰',t:'L'or liquide',d:'L'huile d'argan du Maroc est l'une des huiles les plus précieuses. Riche en vitamine E et acides gras.',q:'« Le luxe marocain en flacon »'},
+      {i:'💆',t:'Soin visage',d:'Quelques gouttes le soir suffisent pour nourrir et illuminer le visage. Anti-rides naturel.',q:'« 3 gouttes, peau transformée »'},
+      {i:'💇',t:'Soin cheveux',d:'Masque ou après-shampooing : brillance, souplesse et protection thermique immédiate.',q:'« Brillance et légèreté »'},
+      {i:'🤲',t:'Soin corps',d:'Huile de corps pour les zones sèches : coudes, genoux, talons. Pénètre sans graisser.',q:'« Peau soyeuse sans résidu »'},
+      {i:'🌟',t:'Argument premium',d:'Positionner l'argan comme produit premium. Clientèle qui cherche de la qualité naturelle.',q:'« La beauté venue du désert »'},
+      {i:'💡',t:'Vente croisée',d:'Proposer argan cheveux + argan visage en duo. Argumenter l'économie vs l'achat en séparé.',q:'« Le duo beauté complet »'},
+     ]},
+    {th:'t6',em:'⚫',cat:'Aurodhea',nm:'Charbon Actif',sl:'Purification',sv:'Détox',chip:'Purifiant',r:180,g:60,b:60,
+     hero:{v:'Charbon',l:'Masques · Soins détox · Pores resserrés'},flow:null,
+     items:[
+      {i:'⚫',t:'Comment ça marche ?',d:'Le charbon actif absorbe les impuretés, toxines et excès de sébum comme un aimant.',q:'« Aspire les impuretés »'},
+      {i:'🎭',t:'Masque purifiant',d:'Masque au charbon actif 1 à 2 fois par semaine. Pores visiblement resserrés après la 1ère utilisation.',q:'« Résultat dès la 1ère utilisation »'},
+      {i:'🧴',t:'Gel nettoyant',d:'Nettoyant quotidien au charbon pour les peaux grasses et mixtes. Équilibre le sébum.',q:'« Peau nette toute la journée »'},
+      {i:'🦷',t:'Dentifrice charbon',d:'Blanchissant naturel puissant au charbon actif. Résultats visibles en 1 semaine.',q:'« Sourire white en 7 jours »'},
+      {i:'🎯',t:'Cible clientèle',d:'Peaux grasses, acné, points noirs. Adolescents et jeunes adultes — segment très réceptif.',q:'« Pour les peaux à problèmes »'},
+      {i:'💡',t:'Argument',d:'Tendance forte des dernières années. Le charbon actif est reconnu et recherché par les clients informés.',q:'« La tendance beauté qui dure »'},
+     ]},
+    {th:'t1',em:'🌰',cat:'Aurodhea',nm:'Huile de Neem',sl:'Propriétés',sv:'Purifiante',chip:'Anti-bactérien',r:80,g:130,b:255,
+     hero:{v:'Neem',l:'Purifiant · Anti-bactérien · Cuir chevelu'},flow:null,
+     items:[
+      {i:'🌿',t:'L'arbre miracle',d:'Le neem ou margousier est utilisé depuis des millénaires en Ayurveda pour ses propriétés médicinales.',q:'« La pharmacie de la nature »'},
+      {i:'🦠',t:'Anti-bactérien',d:'Propriétés anti-fongiques et anti-bactériennes naturelles. Idéal pour les problèmes de peau récurrents.',q:'« La nature contre les bactéries »'},
+      {i:'💇',t:'Cuir chevelu',d:'Traitement des pellicules, démangeaisons et cuir chevelu irrité. Résultats rapides et durables.',q:'« Adieu pellicules »'},
+      {i:'🧴',t:'Soin corps',d:'Idéal pour les peaux à tendance acnéique ou sujettes aux boutons. Action purifiante profonde.',q:'« Peau purifiée en profondeur »'},
+      {i:'⚠️',t:'Note de vente',d:'L'huile de neem a une odeur forte naturelle. Mentionner ce point pour éviter les retours.',q:'« Une odeur forte = une action forte »'},
+      {i:'💡',t:'Positionnement',d:'Produit de niche pour clients cherchant des solutions naturelles aux problèmes récurrents.',q:'« Quand rien d'autre ne marche »'},
+     ]},
+    {th:'t2',em:'💆',cat:'Aurodhea',nm:'Conseils Vente Soin',sl:'Méthode',sv:'Diagnostic',chip:'Technique',r:200,g:80,b:200,
+     hero:{v:'Conseil',l:'Identifier · Proposer · Vendre'},flow:null,
+     items:[
+      {i:'🔍',t:'Diagnostic peau',d:'Commencer par : "Quel est votre principal problème de peau ?" — sèche, grasse, mixte, sensible, âge.',q:'« Quel est votre problème de peau ? »'},
+      {i:'🎯',t:'Proposer le bon produit',d:'Sèche → Argan. Grasse → Charbon. Imperfections → Bave. Sensible → Aloe. Cheveux → Neem ou Bave.',q:'« J'ai exactement ce qu'il vous faut »'},
+      {i:'🤲',t:'Faire tester',d:'Toujours proposer un test sur la main ou le poignet. Le toucher et le résultat immédiat déclenchent l'achat.',q:'« Essayez, vous sentirez la différence »'},
+      {i:'📦',t:'Proposer en duo',d:'Crème + sérum, shampoing + soin. Un duo se vend aussi bien qu'un seul produit avec plus de valeur.',q:'« Le duo pour de vrais résultats »'},
+      {i:'🔄',t:'Fidélisation',d:'Les soins se consomment régulièrement. Proposer la récurrence : "Vous en avez pour 2 mois, je vous recontacte".',q:'« Je vous recontacte dans 2 mois »'},
+      {i:'🎁',t:'Cadeau beauté',d:'Un coffret soin + parfum = le cadeau beauté parfait. Se vend très bien pour toutes les occasions.',q:'« Le cadeau beauté complet »'},
+     ]},
    ]},
-  {th:'t4',em:'🎯',cat:'Augmenter le panier',nm:'Méthode PCA',sl:'Panier moyen',sv:'+30%',chip:'3 leviers',r:230,g:130,b:40,
-   hero:{v:'PCA',l:'Promo → Complément → Additionnel'},flow:null,
-   items:[
-    {i:'P',t:'Promo — Attaquer d\'emblée',d:'Offre pour capter l\'attention immédiatement.',q:'« 2 achetés = le 3ème à -50% »'},
-    {i:'C',t:'Complément — Après le OUI',d:'Proposer le produit assorti.',q:'« Et avec ça, le lait corporel ? »'},
-    {i:'A',t:'Additionnel — Ouvrir une porte',d:'Élargir vers d\'autres univers produits.',q:'« On a aussi des parfums d\'ambiance »'},
+
+  /* ── 4. MAQUILLAGE ── */
+  {th:'t4',em:'💄',nm:'Maquillage Make-up',sub:'Visage · Yeux · Lèvres · Ongles',chip:'Make-up',r:220,g:130,b:40,
+   cards:[
+    {th:'t4',em:'🧴',cat:'Make-up',nm:'Teint & Visage',sl:'Base',sv:'Fond de teint',chip:'Teint',r:220,g:130,b:40,
+     hero:{v:'Teint',l:'Fond de teint · BB cream · Poudres'},flow:null,
+     items:[
+      {i:'🎨',t:'Fond de teint',d:'Couvrance légère à complète selon les formules. Plusieurs teintes pour s'adapter à toutes les carnations.',q:'« Votre teint naturellement parfait »'},
+      {i:'✨',t:'BB Cream',d:'Tout-en-un : hydratation + légère couvrance + protection. Idéal pour un maquillage rapide.',q:'« 5 soins en 1 geste »'},
+      {i:'💎',t:'Enlumineur / Highlighter',d:'Pour un teint lumineux et bonne mine. Tendance et polyvalent — se vend très facilement.',q:'« Le glow en un geste »'},
+      {i:'🟤',t:'Contour & Bronzer',d:'Sculpter le visage, réchauffer le teint. Produits tendance très demandés.',q:'« Le soleil en pot »'},
+      {i:'🔍',t:'Correcteur & Anti-cernes',d:'Cacher les imperfections et les cernes. Besoin universel — proposition facile.',q:'« Adieu cernes »'},
+      {i:'💡',t:'Conseil vente',d:'Associer fond de teint + poudre fixante pour proposer un duo tenue longue durée.',q:'« Pour tenir toute la journée »'},
+     ]},
+    {th:'t5',em:'👁️',cat:'Make-up',nm:'Yeux',sl:'Collection',sv:'Regard',chip:'Yeux',r:30,g:190,b:210,
+     hero:{v:'Yeux',l:'Mascara · Eye-liner · Fards · Crayons'},flow:null,
+     items:[
+      {i:'👁️',t:'Mascara',d:'Volume, allongement, courbe — différentes formules pour tous les regards. Résistant à l'eau disponible.',q:'« Les cils qui font parler »'},
+      {i:'✏️',t:'Eye-liner',d:'Crayon et liquide pour définir et intensifier le regard. Du tracé naturel au trait graphique.',q:'« Du regard naturel à l'intense »'},
+      {i:'🎨',t:'Fards à paupières',d:'Palettes mono et multi-couleurs. Des tons naturels aux couleurs tendance. Pigmentation intense.',q:'« Toutes les couleurs du regard »'},
+      {i:'✒️',t:'Crayons yeux',d:'Khôl, kajal, crayon couleur — pour tous les styles de maquillage.',q:'« L'essentiel du maquillage yeux »'},
+      {i:'🧼',t:'Démaquillant yeux',d:'Proposer systématiquement le démaquillant avec chaque vente maquillage yeux.',q:'« Et le démaquillant avec ? »'},
+      {i:'💡',t:'Conseil vente',d:'Le mascara + eye-liner = le duo yeux parfait. Facile à proposer ensemble pour doubler la vente.',q:'« Le duo yeux complet »'},
+     ]},
+    {th:'t1',em:'💋',cat:'Make-up',nm:'Lèvres',sl:'Collection',sv:'Lèvres',chip:'Lèvres',r:80,g:130,b:255,
+     hero:{v:'Lèvres',l:'Rouge · Gloss · Baume · Longue tenue'},flow:null,
+     items:[
+      {i:'💄',t:'Rouge à lèvres',d:'Mat, satiné, brillant — large palette de couleurs tendance. Longue tenue jusqu'à 8h.',q:'« La touche finale parfaite »'},
+      {i:'✨',t:'Gloss',d:'Volume et brillance pour les lèvres. Parfait seul ou sur un rouge pour intensifier.',q:'« Des lèvres pulpeuses »'},
+      {i:'💧',t:'Baume hydratant',d:'Soin lèvres hydratant avec légère couleur. Idéal pour l'usage quotidien.',q:'« Soin et couleur en un »'},
+      {i:'🎨',t:'Crayon contour',d:'Définir et agrandir le contour des lèvres. Prolonge la tenue du rouge.',q:'« Lèvres parfaites toute la journée »'},
+      {i:'🌙',t:'Soin de nuit',d:'Baume réparateur nuit pour des lèvres douces au réveil. Vente additionnelle facile.',q:'« Lèvres douces au réveil »'},
+      {i:'💡',t:'Conseil vente',d:'Rouge + crayon contour = duo qui double la tenue. Toujours proposer l'association.',q:'« Pour que ça tienne toute la journée »'},
+     ]},
+    {th:'t2',em:'💅',cat:'Make-up',nm:'Ongles',sl:'Collection',sv:'Vernis',chip:'Ongles',r:200,g:80,b:200,
+     hero:{v:'Ongles',l:'Vernis · Soins · Accessoires'},flow:null,
+     items:[
+      {i:'💅',t:'Vernis longue tenue',d:'Formules gel et classiques. Finition brillante ou mate. Palette de couleurs tendance renouvelée.',q:'« La couleur qui dure »'},
+      {i:'💆',t:'Soins des ongles',d:'Base fortifiante, huile cuticules, top coat. Protéger et soigner les ongles fragilisés.',q:'« Des ongles en bonne santé »'},
+      {i:'🎨',t:'Nail art',d:'Accessoires pour créer des designs nail art tendance. Clientèle jeune très réceptive.',q:'« Exprimez votre style »'},
+      {i:'🧴',t:'Dissolvant doux',d:'Dissolvants sans acétone qui préservent les ongles. Proposer avec chaque vente vernis.',q:'« Le dissolvant qui prend soin »'},
+      {i:'🎁',t:'Coffret ongles',d:'Un coffret vernis + soin = cadeau parfait à moins de 25€. Se vend en toute occasion.',q:'« Le cadeau mini-budget »'},
+      {i:'💡',t:'Conseil vente',d:'Proposer les ongles en complément du maquillage ou en cadeau accompagnement.',q:'« Et pour les ongles assortis ? »'},
+     ]},
+    {th:'t6',em:'🎁',cat:'Make-up',nm:'Coffrets & Cadeaux',sl:'Occasion',sv:'Cadeau',chip:'Coffrets',r:180,g:60,b:60,
+     hero:{v:'Coffrets',l:'Parfum · Make-up · Occasions spéciales'},flow:null,
+     items:[
+      {i:'🎄',t:'Coffret Noël',d:'Les coffrets parfum + make-up sont les stars des ventes de décembre. Anticiper les commandes.',q:'« Le cadeau de Noël qui plaît à coup sûr »'},
+      {i:'💐',t:'Fête des mères',d:'Le moment le plus fort de l'année pour les coffrets beauté. Préparer un argumentaire ciblé.',q:'« Pour gâter maman »'},
+      {i:'💑',t:'Saint-Valentin',d:'Parfum + rouge à lèvres = duo romantique parfait. Se prépare dès fin janvier.',q:'« Le duo amoureux »'},
+      {i:'🎂',t:'Anniversaire',d:'Coffret personnalisable selon le budget. Proposer toujours 3 niveaux de prix.',q:'« Pour chaque budget »'},
+      {i:'💡',t:'Conseil vente',d:'Toujours proposer un coffret plutôt que produit seul : marge meilleure, client plus satisfait.',q:'« Un coffret fait toujours plus plaisir »'},
+      {i:'📦',t:'Présentation',d:'Soigner la présentation des coffrets. Un joli emballage multiplie la valeur perçue.',q:'« Le packaging vend autant que le produit »'},
+     ]},
+    {th:'t3',em:'🎨',cat:'Make-up',nm:'Tendances & Conseils',sl:'Saison',sv:'Tendance',chip:'Tips',r:40,g:190,b:130,
+     hero:{v:'Tendances',l:'Conseils maquillage · Techniques de vente'},flow:null,
+     items:[
+      {i:'☀️',t:'Tendances printemps-été',d:'Couleurs vives, nude naturel, teint frais. Adapter les propositions à la saison en cours.',q:'« Les couleurs de la saison »'},
+      {i:'🍂',t:'Tendances automne-hiver',d:'Tons chauds, bordeaux, cuivres, contours prononcés. Anticiper pour les commandes.',q:'« Les tons de la saison froide »'},
+      {i:'📱',t:'Argument réseaux sociaux',d:'Le maquillage Chogan = rapport qualité-prix viral. Beaucoup de clientes comparent sur TikTok/Insta.',q:'« Même qualité que les marques vues sur Insta »'},
+      {i:'🎯',t:'Clientèle cible',d:'18-45 ans principalement. Réceptives aux arguments qualité/prix et aux recommandations.',q:'« La beauté sans se ruiner »'},
+      {i:'🤝',t:'Démonstration',d:'Toujours proposer de tester sur la main. La démonstration fait décupler les ventes de make-up.',q:'« Je vous montre sur votre main »'},
+      {i:'🔄',t:'Fidélisation',d:'Le maquillage s'achète régulièrement. Proposer un rendez-vous beauté mensuel.',q:'« Je vous présente les nouveautés chaque mois »'},
+     ]},
    ]},
-  {th:'t5',em:'📊',cat:'Auto-évaluation',nm:'Autodiagnostic VAMP',sl:'Piliers',sv:'4',chip:'Performance',r:30,g:190,b:210,
-   hero:{v:'VAMP',l:'Évaluer sa performance sur 4 piliers'},flow:null,
-   items:[
-    {i:'V',t:'Vente',d:'Je propose systématiquement. Je persévère après un refus.'},
-    {i:'A',t:'Accueil',d:'Je souris naturellement. Je remercie toujours.'},
-    {i:'M',t:'Méthodes',d:'Je maîtrise les 5 chiffres. J\'utilise SONCAS.'},
-    {i:'P',t:'Personnalité',d:'Énergie, confiance, j\'ose proposer sans timidité.'},
+
+  /* ── 5. ENTRETIEN BRILHOME ── */
+  {th:'t5',em:'🧽',nm:'Entretien Brilhome',sub:'Écologique · Professionnel · Concentré',chip:'Ménager',r:30,g:185,b:200,
+   cards:[
+    {th:'t5',em:'🍽️',cat:'Brilhome',nm:'Cuisine',sl:'Dégraissage',sv:'Puissant',chip:'Cuisine',r:30,g:185,b:200,
+     hero:{v:'Cuisine',l:'Dégraissants · Multi-usages · Vaisselle'},flow:null,
+     items:[
+      {i:'💪',t:'Dégraissant puissant',d:'Élimine les graisses cuites les plus tenaces sur les plaques, hottes et fours.',q:'« Le four comme neuf en 5 minutes »'},
+      {i:'🍽️',t:'Liquide vaisselle',d:'Formule concentrée et douce pour les mains. Un flacon dure 3x plus longtemps que la concurrence.',q:'« Un flacon = 3 flacons grande surface »'},
+      {i:'✨',t:'Nettoyant multi-usages',d:'Surfaces, plans de travail, électroménager. Un seul produit pour toute la cuisine.',q:'« Un produit pour tout »'},
+      {i:'🌱',t:'Argument écolo',d:'Formulation biodégradable sans phosphates. Respectueux des canalisations et de l'environnement.',q:'« Efficace ET responsable »'},
+      {i:'💰',t:'Argument économique',d:'Concentrés = moins de quantité nécessaire. Calculer le coût réel : 3x moins cher que la grande surface.',q:'« Faites le calcul »'},
+      {i:'🔢',t:'Chiffrer la vente',d:'Un flacon 1L Brilhome = 3 flacons classiques. 15€ ici vs 3x5€ = même prix, même usage, meilleure qualité.',q:'« Même budget, meilleure qualité »'},
+     ]},
+    {th:'t4',em:'👕',cat:'Brilhome',nm:'Linge',sl:'Résultats',sv:'Pro',chip:'Lessive',r:220,g:130,b:40,
+     hero:{v:'Linge',l:'Lessive · Assouplissant · Détachant'},flow:null,
+     items:[
+      {i:'🧺',t:'Lessive liquide',d:'Formule concentrée haute performance. Efficace dès 30°C pour économiser l'énergie.',q:'« Propre à basse température »'},
+      {i:'🌸',t:'Assouplissant',d:'Linge doux et parfumé longue durée. Plusieurs fragrances disponibles.',q:'« Linge doux et parfumé »'},
+      {i:'🩹',t:'Détachant',d:'Élimine les taches tenaces avant lavage. Formule sans javel qui préserve les couleurs.',q:'« Plus de taches, mêmes couleurs »'},
+      {i:'👕',t:'Soin des fibres',d:'Formule douce qui préserve les fibres et les couleurs sur le long terme.',q:'« Vos vêtements durent plus longtemps »'},
+      {i:'🌱',t:'Écologique',d:'Sans phosphates, biodégradable, flacon rechargeable. Argumentaire écolo fort.',q:'« Propre pour vos vêtements et la planète »'},
+      {i:'💡',t:'Vente famille',d:'Proposer lessive + assouplissant en duo. Les familles achètent régulièrement — fidélisation facile.',q:'« Je vous recontacte quand vous finissez »'},
+     ]},
+    {th:'t6',em:'🏠',cat:'Brilhome',nm:'Sols & Surfaces',sl:'Polyvalent',sv:'Maison',chip:'Sol',r:180,g:60,b:60,
+     hero:{v:'Sols',l:'Tous types de sols · Vitres · Surfaces'},flow:null,
+     items:[
+      {i:'🏠',t:'Nettoyant sols universel',d:'Parquet, carrelage, marbre, vinyle — une seule formule adaptée à tous les sols.',q:'« Un seul produit pour tous vos sols »'},
+      {i:'🔍',t:'Nettoyant vitres',d:'Sans traces, séchage rapide. Résultat professionnel sans effort.',q:'« Des vitres impeccables »'},
+      {i:'🛁',t:'Nettoyant salle de bain',d:'Calcaire, joints, robinetterie — traitement complet de la salle de bain.',q:'« Salle de bain brillante »'},
+      {i:'🧴',t:'Spray multi-surfaces',d:'Cuisine, bureau, mobilier — le spray quotidien polyvalent indispensable.',q:'« L'indispensable du quotidien »'},
+      {i:'💪',t:'Anticalcaire puissant',d:'Zones à forte teneur en calcaire. Formule acide douce sans endommager les surfaces.',q:'« Le calcaire disparaît »'},
+      {i:'💡',t:'Pack maison',d:'Proposer un pack sols + vitres + salle de bain. 3 produits, une seule conversation.',q:'« La maison entière pour moins de 40€ »'},
+     ]},
+    {th:'t1',em:'💪',cat:'Brilhome',nm:'Dégraissants Pro',sl:'Performance',sv:'Industriel',chip:'Pro',r:80,g:130,b:255,
+     hero:{v:'Pro',l:'Formulations haute performance · Usage intensif'},flow:null,
+     items:[
+      {i:'🏭',t:'Qualité professionnelle',d:'Formules développées pour un usage intensif en restauration, hôtellerie et industrie.',q:'« La puissance professionnelle chez soi »'},
+      {i:'🔥',t:'Graisses incrustées',d:'Élimine les graisses cuites, brûlées et incrustées que les produits classiques ne touchent pas.',q:'« Quand les autres ne suffisent plus »'},
+      {i:'⏱️',t:'Action rapide',d:'Temps de contact court pour un résultat immédiat. Pas besoin de frotter pendant des heures.',q:'« 5 minutes, résultat garanti »'},
+      {i:'🌱',t:'Concentré dilutable',d:'Dilution selon l'usage : entretien quotidien ou nettoyage intensif. Un flacon = plusieurs usages.',q:'« Un flacon, deux usages »'},
+      {i:'🎯',t:'Cible pro et particulier',d:'Se vend aussi bien aux particuliers exigeants qu'aux petits professionnels (restaurants, artisans).',q:'« Pour les particuliers qui veulent le meilleur »'},
+      {i:'💰',t:'Argument ROI',d:'Calculer le coût à l'utilisation vs produits classiques. 3 à 5 fois plus économique sur 1 an.',q:'« Rentabilisé en 3 mois »'},
+     ]},
+    {th:'t2',em:'🌱',cat:'Brilhome',nm:'Argument Écologique',sl:'Engagement',sv:'Bio',chip:'Éco',r:200,g:80,b:200,
+     hero:{v:'Éco',l:'Biodégradable · Sans phosphates · Responsable'},flow:null,
+     items:[
+      {i:'🌍',t:'Formulation biodégradable',d:'Tous les produits Brilhome se dégradent naturellement. Pas d'accumulation dans les sols et cours d'eau.',q:'« Propre jusqu'au bout »'},
+      {i:'🚫',t:'Sans phosphates',d:'Phosphates interdits dans beaucoup de pays. Brilhome est en avance sur la réglementation.',q:'« En avance sur la loi »'},
+      {i:'🎨',t:'Sans colorants agressifs',d:'Formulations neutres sans colorants synthétiques. Meilleures pour les peaux sensibles.',q:'« Doux pour les mains »'},
+      {i:'📦',t:'Packaging recyclable',d:'Flacons recyclables et rechargeables. Réduire les déchets plastique à la source.',q:'« Moins de plastique »'},
+      {i:'👨‍👩‍👧',t:'Argument famille',d:'Produits sûrs pour les enfants et les animaux domestiques. Rassure les mamans.',q:'« Sûr pour toute la famille »'},
+      {i:'💡',t:'Vendre l'écologie',d:'L'argument écologique est de plus en plus décisif. Combiner performance + écologie = argument imparable.',q:'« Aussi efficace, beaucoup plus responsable »'},
+     ]},
+    {th:'t3',em:'💰',cat:'Brilhome',nm:'Argument Économique',sl:'Économie',sv:'x3',chip:'Prix',r:40,g:190,b:130,
+     hero:{v:'×3',l:'3 fois moins cher · Concentré · Calculer'},flow:null,
+     items:[
+      {i:'🔢',t:'Le calcul gagnant',d:'1 flacon Brilhome concentré = 3 flacons grande surface. À prix similaire = 3x plus économique.',q:'« Faites le calcul avec moi »'},
+      {i:'📅',t:'Sur 1 an',d:'Une famille dépense ~120€/an en produits ménagers. Avec Brilhome : ~40€. Économie : 80€/an.',q:'« 80€ d'économie par an »'},
+      {i:'🏆',t:'Qualité vs prix',d:'Qualité professionnelle pour un prix inférieur à la grande surface. L'argument ultime.',q:'« Meilleure qualité, moins cher »'},
+      {i:'🧮',t:'Calculer devant le client',d:'Montrer le calcul en direct : "Votre lessive habituelle à 5€, 1 par mois = 60€. Ici : 15€, dure 4 mois.".',q:'« Je vous montre le calcul »'},
+      {i:'🔄',t:'Abonnement / récurrence',d:'Les ménagers s'achètent tous les mois. Proposer une commande régulière avec remise fidélité.',q:'« Je vous programme la commande »'},
+      {i:'🎯',t:'Cible économique',d:'Argument clé pour les familles, les personnes avec petit budget, les grands consommateurs.',q:'« Pour les familles qui font attention au budget »'},
+     ]},
    ]},
-  {th:'t6',em:'🛡️',cat:'Gérer les résistances',nm:'Objections',sl:'Réponses',sv:'3+',chip:'NON→OUI',r:230,g:60,b:60,
-   hero:{v:'NON',l:'Signal d\'intérêt déguisé — Écouter · Reformuler · Argumenter'},flow:null,
-   items:[
-    {i:'?',t:'« C\'est de la contrefaçon ? »',d:'Essences de Grasse — même fournisseur que Chanel. Légal.',q:'« Légal, traçable, certifié »'},
-    {i:'⏱',t:'« Ça ne tient pas »',d:'30% d\'essence = tenue 8 à 24h.',q:'« Testez ce soir, jugez demain »'},
-    {i:'🕐',t:'« Pas le temps »',d:'Laisser un échantillon et une carte.',q:'« L\'odeur parle d\'elle-même »'},
-   ]},,
-  // ══════════════════════════════════════════
-  // CATALOGUE CHOGAN — 6 CATÉGORIES
-  // ══════════════════════════════════════════
-  {th:'t1',em:'🌹',cat:'Catalogue Chogan',nm:'Parfumerie Olfazeta',sl:'Essences de Grasse',sv:'FragWorld',chip:'Parfums',r:100,g:140,b:255,
-   hero:{v:'Olfazeta',l:'Parfums femme · homme · enfant · mixte'},flow:null,
-   items:[
-    {i:'🌸',t:'Parfums Femme',d:'Large gamme de fragrances féminines élaborées avec des essences de Grasse. De la fleur légère au oriental intense.',q:'« La féminité en flacon »'},
-    {i:'🧔',t:'Parfums Homme',d:'Collections masculines boisées, aromatiques ou aquatiques. Sillage puissant grâce aux 30% d'extrait.',q:'« L'élégance masculine »'},
-    {i:'👶',t:'Parfums Enfant',d:'Fragrances douces et hypoallergéniques spécialement formulées pour les plus jeunes.',q:'« Douceur garantie »'},
-    {i:'✨',t:'Fragrances Mixtes',d:'Parfums unisexes modernes, tendance et polyvalents. Parfaits en cadeau pour tous.',q:'« Pour elle, pour lui »'},
-    {i:'🏺',t:'Essences de Grasse',d:'Fournisseur exclusif : FragWorld à Grasse — même source que les grandes maisons de luxe (Chanel, Dior...).',q:'« Même source, prix différent »'},
-    {i:'💶',t:'Rapport qualité-prix',d:'30% d'extrait de parfum, tenue 8-24h. Tarif : 29€ en moyenne vs 80-150€ en boutique de luxe.',q:'« -70% par rapport aux grandes marques »'},
-   ]},
-  {th:'t2',em:'🐌',cat:'Catalogue Chogan',nm:'Soin Corps Aurodhea',sl:'Ingrédients naturels',sv:'Bave · Aloe · Neem',chip:'Cosmétiques',r:160,g:90,b:255,
-   hero:{v:'Aurodhea',l:'Soins naturels · Bave d'escargot · Aloe vera'},flow:null,
-   items:[
-    {i:'🐌',t:'Bave d'escargot',d:'Crèmes visage, shampoings et soins réparateurs à base de bave d'escargot. Action anti-âge et régénérante.',q:'« Le secret de la peau neuve »'},
-    {i:'🌿',t:'Aloe Vera',d:'Gels apaisants, dentifrices et soins hydratants à l'aloe vera pur. Idéal pour peaux sensibles.',q:'« 100% naturel, 0% compromis »'},
-    {i:'🌰',t:'Huile de Neem',d:'Propriétés purifiantes et antibactériennes. Utilisée dans les soins du cuir chevelu et de la peau à problèmes.',q:'« La plante qui guérit »'},
-    {i:'✨',t:'Huile d'Argan',d:'L'or liquide du Maroc. Nourrit, répare et sublime les cheveux et la peau sèche en profondeur.',q:'« Luxe naturel du Maghreb »'},
-    {i:'⚫',t:'Charbon actif',d:'Masques et soins détox au charbon actif. Absorbe les impuretés et resserre les pores visiblement.',q:'« Le détox puissant »'},
-    {i:'💊',t:'Conseil vente',d:'Identifier la problématique peau du client (sèche, grasse, mixte) pour proposer le soin adapté de la gamme Aurodhea.',q:'« Quel est votre problème de peau ? »'},
-   ]},
-  {th:'t3',em:'💄',cat:'Catalogue Chogan',nm:'Maquillage Make-up',sl:'Gamme complète',sv:'Visage · Yeux · Lèvres',chip:'Make-up',r:40,g:190,b:130,
-   hero:{v:'Make-up',l:'Visage · Yeux · Lèvres · Ongles'},flow:null,
-   items:[
-    {i:'🧴',t:'Teint & Visage',d:'Fond de teint, BB cream, correcteurs et poudres pour un teint unifié et naturel toute la journée.',q:'« Base parfaite, journée parfaite »'},
-    {i:'👁️',t:'Yeux',d:'Mascaras, eye-liners, fards à paupières et crayons. Du regard naturel au regard intense.',q:'« Les yeux qui parlent »'},
-    {i:'💋',t:'Lèvres',d:'Rouges à lèvres, gloss et baumes hydratants. Longue tenue et couleurs tendance chaque saison.',q:'« La touche finale »'},
-    {i:'💅',t:'Ongles',d:'Vernis à ongles longue tenue, soins des ongles et accessoires. Large palette de couleurs.',q:'« Du bout des doigts »'},
-    {i:'🎨',t:'Argumentaire vente',d:'La gamme make-up se vend très bien en complément du parfum. Proposer systématiquement après la vente parfum.',q:'« Et pour compléter votre look ? »'},
-    {i:'🎁',t:'Idée cadeau',d:'Les coffrets make-up + parfum sont les meilleures ventes sur les périodes festives (Noël, fête des mères).',q:'« Le duo parfait en cadeau »'},
-   ]},
-  {th:'t4',em:'🧽',cat:'Catalogue Chogan',nm:'Entretien Brilhome',sl:'Écologique & efficace',sv:'Pro & maison',chip:'Ménager',r:220,g:130,b:30,
-   hero:{v:'Brilhome',l:'Produits ménagers professionnels et écologiques'},flow:null,
-   items:[
-    {i:'🍽️',t:'Cuisine',d:'Dégraissants puissants, liquides vaisselle et produits multi-usages cuisine. Efficaces et respectueux de l'environnement.',q:'« Propre sans compromis »'},
-    {i:'👕',t:'Linge',d:'Lessives liquides et en poudre, assouplissants et détachants. Résultats professionnels à la maison.',q:'« Linge impeccable »'},
-    {i:'🏠',t:'Sols & Surfaces',d:'Produits pour tous types de sols, vitres et surfaces. Une seule gamme pour toute la maison.',q:'« La maison brille »'},
-    {i:'💪',t:'Dégraissants pro',d:'Formulations concentrées à haute performance pour les graisses tenaces. Utilisés aussi en milieu professionnel.',q:'« Le pro à la maison »'},
-    {i:'🌱',t:'Argument écolo',d:'Formulations biodégradables, sans phosphates ni colorants agressifs. Argument fort pour les clients éco-conscients.',q:'« Efficace ET responsable »'},
-    {i:'💰',t:'Argument économique',d:'Produits concentrés = moins de quantité nécessaire. Économique sur le long terme vs marques grande surface.',q:'« Un flacon dure 3x plus longtemps »'},
-   ]},
-  {th:'t5',em:'🌿',cat:'Catalogue Chogan',nm:'Hygiène & Bien-être',sl:'Santé naturelle',sv:'Dentaire · HE · Nutri',chip:'Bien-être',r:30,g:185,b:200,
-   hero:{v:'Bien-être',l:'Soins dentaires · Huiles essentielles · Compléments'},flow:null,
-   items:[
-    {i:'🦷',t:'Soins dentaires',d:'Dentifrices à l'aloe vera, bains de bouche et blanchissants naturels. Hygiène bucco-dentaire complète.',q:'« Sourire sain, sourire confiant »'},
-    {i:'💧',t:'Huiles essentielles pures',d:'Gamme d'huiles essentielles certifiées pures. Lavande, tea tree, menthe poivrée et bien d'autres.',q:'« La nature en une goutte »'},
-    {i:'⚡',t:'Énergie & Vitalité',d:'Compléments alimentaires pour booster l'énergie au quotidien. Formulations naturelles à base de plantes.',q:'« Votre boost naturel »'},
-    {i:'⚖️',t:'Minceur',d:'Programmes minceur naturels : brûleurs de graisses, coupe-faim naturels et détox. Sans effets secondaires.',q:'« Minceur sans contrainte »'},
-    {i:'🛡️',t:'Immunité & Défenses',d:'Compléments pour renforcer les défenses naturelles. Vitamines, minéraux et extraits de plantes.',q:'« Fort de l'intérieur »'},
-    {i:'💡',t:'Conseil vente',d:'Les compléments se vendent très bien en abonnement mensuel. Proposer la régularité pour des résultats visibles.',q:'« Les résultats viennent avec la régularité »'},
-   ]},
-  {th:'t6',em:'💎',cat:'Catalogue Chogan',nm:'Accessoires & Bijoux',sl:'Collections tendance',sv:'Étuis · Sacs · Bijoux',chip:'Accessoires',r:220,g:55,b:100,
-   hero:{v:'Access.',l:'Étuis · Sacs · Lunettes · Bijoux'},flow:null,
-   items:[
-    {i:'🧴',t:'Étuis à parfum',d:'Étuis élégants pour transporter et offrir les parfums Chogan. Idéaux pour les cadeaux et les présentations.',q:'« Le packaging fait la vente »'},
-    {i:'👜',t:'Sacs & Maroquinerie',d:'Collections de sacs tendance proposées selon les catalogues en vigueur. Qualité premium, prix accessible.',q:'« Le style au quotidien »'},
-    {i:'🕶️',t:'Lunettes de soleil',d:'Collections de lunettes de soleil tendance disponibles selon les saisons. Protection UV et style garantis.',q:'« L'été toute l'année »'},
-    {i:'💍',t:'Bijoux',d:'Colliers, bracelets et boucles d'oreilles selon les collections disponibles. Idéaux en vente associée.',q:'« L'écrin parfait »'},
-    {i:'🎁',t:'Vente associée',d:'Les accessoires sont parfaits en complément d'un parfum. Proposer systématiquement : étui + parfum = panier doublé.',q:'« Ajoutez l'étui avec le parfum »'},
-    {i:'📦',t:'Stock & Catalogue',d:'Les collections accessoires et bijoux varient selon les catalogues. Toujours vérifier la disponibilité avant de proposer.',q:'« Consultez le catalogue actuel »'},
+
+  /* ── 6. HYGIÈNE & BIEN-ÊTRE ── */
+  {th:'t6',em:'🌿',nm:'Hygiène & Bien-être',sub:'Dentaire · Huiles essentielles · Compléments',chip:'Bien-être',r:220,g:55,b:100,
+   cards:[
+    {th:'t6',em:'🦷',cat:'Bien-être',nm:'Soins Dentaires',sl:'Formules',sv:'Naturel',chip:'Dentaire',r:220,g:55,b:100,
+     hero:{v:'Dental',l:'Dentifrices · Bains de bouche · Blanchissant'},flow:null,
+     items:[
+      {i:'🦷',t:'Dentifrice aloe vera',d:'Formule naturelle à l'aloe vera. Nettoyage doux, protection des gencives, haleine fraîche.',q:'« La nature dans votre sourire »'},
+      {i:'⚫',t:'Dentifrice charbon',d:'Blanchissant naturel puissant au charbon actif. Résultats visibles en 7 jours.',q:'« Sourire white en 1 semaine »'},
+      {i:'💧',t:'Bain de bouche',d:'Formule antibactérienne naturelle. Protection 12h contre la plaque et les bactéries.',q:'« 12h de protection »'},
+      {i:'🌿',t:'Brosse interdentaire',d:'Complément hygiène pour les espaces interdentaires. Proposer avec chaque vente dentifrice.',q:'« Le soin complet »'},
+      {i:'😁',t:'Argument sourire',d:'Un beau sourire est le premier atout en vente. Citer le résultat final : sourire blanc et confiance.',q:'« Le sourire qui convainc »'},
+      {i:'💡',t:'Vente systématique',d:'Proposer dentifrice + bain de bouche en duo. Soin complet, valeur ajoutée, fidélisation rapide.',q:'« Le duo hygiène parfait »'},
+     ]},
+    {th:'t1',em:'💧',cat:'Bien-être',nm:'Huiles Essentielles',sl:'Pureté',sv:'100%',chip:'Aromathérapie',r:80,g:130,b:255,
+     hero:{v:'HE pures',l:'Lavande · Tea tree · Menthe · Et plus'},flow:null,
+     items:[
+      {i:'💜',t:'Lavande vraie',d:'L'huile essentielle la plus polyvalente : stress, insomnie, cicatrisation, maux de tête.',q:'« La HE de base de tout foyer »'},
+      {i:'🌿',t:'Tea Tree (Arbre à thé)',d:'Anti-infectieux, anti-fongique, anti-bactérien. Incontournable pour l'immunité et la peau.',q:'« La pharmacie dans un flacon »'},
+      {i:'💚',t:'Menthe poivrée',d:'Énergie, concentration, maux de tête, nausées. Très rapide d'action — effet immédiat.',q:'« L'énergie instantanée »'},
+      {i:'🍊',t:'Orange douce',d:'Anti-déprime naturel, purification d'air, diffusion. La plus accessible pour les débutants.',q:'« La bonne humeur en flacon »'},
+      {i:'🌹',t:'Géranium rosat',d:'Équilibrant hormonal, peau, stress. Très prisé par la clientèle féminine.',q:'« L'équilibre féminin »'},
+      {i:'💡',t:'Conseil vente',d:'Toujours proposer un diffuseur avec les HE. Et former brièvement sur les modes d'utilisation.',q:'« Comment les utiliser ? Je vous montre »'},
+     ]},
+    {th:'t3',em:'⚡',cat:'Bien-être',nm:'Énergie & Vitalité',sl:'Formule',sv:'Naturel',chip:'Énergie',r:40,g:190,b:130,
+     hero:{v:'Énergie',l:'Compléments naturels · Performance · Récupération'},flow:null,
+     items:[
+      {i:'⚡',t:'Boost énergie',d:'Compléments à base de ginseng, guarana, vitamines B. Pour les personnes fatiguées ou actives.',q:'« L'énergie au naturel »'},
+      {i:'💪',t:'Sport & Performance',d:'Formules pour soutenir les performances sportives et la récupération musculaire.',q:'« Avant l'effort, après l'effort »'},
+      {i:'🧠',t:'Concentration',d:'Omega-3, magnésium, ginkgo biloba — pour la concentration et les performances cognitives.',q:'« Plus net, plus concentré »'},
+      {i:'🌙',t:'Sommeil & Récupération',d:'Mélatonine naturelle, valériane, passiflore — retrouver un sommeil réparateur.',q:'« Dormir pour performer »'},
+      {i:'☀️',t:'Vitamine D & Immunité',d:'Cure de vitamines D, C et zinc pour renforcer les défenses immunitaires. Se vend à l'automne.',q:'« Renforcez vos défenses »'},
+      {i:'💡',t:'Conseil vente',d:'Identifier le besoin : fatigue, sport, stress, sommeil. Puis proposer la formule adaptée.',q:'« C'est quoi votre problème de fond ? »'},
+     ]},
+    {th:'t4',em:'⚖️',cat:'Bien-être',nm:'Minceur',sl:'Programme',sv:'Naturel',chip:'Minceur',r:220,g:130,b:40,
+     hero:{v:'Minceur',l:'Brûleurs · Coupe-faim · Détox · Drainage'},flow:null,
+     items:[
+      {i:'🔥',t:'Brûleurs de graisses',d:'Formules thermogéniques naturelles : thé vert, L-carnitine, poivre de Cayenne. Stimulent le métabolisme.',q:'« Accélérer naturellement »'},
+      {i:'🥗',t:'Coupe-faim naturels',d:'Glucomannane, psyllium, nopal — réduire les fringales et l'appétit sans effets secondaires.',q:'« Moins faim, naturellement »'},
+      {i:'🌿',t:'Programme détox',d:'Cure de 10 jours pour nettoyer l'organisme et retrouver de la vitalité. Idéal en début de programme.',q:'« On commence par nettoyer »'},
+      {i:'💧',t:'Drainant',d:'Élimine la rétention d'eau et les toxines. Résultats visibles rapidement sur les jambes lourdes.',q:'« Légère en 3 jours »'},
+      {i:'📋',t:'Programme complet',d:'Proposer un programme sur 1-3 mois : détox + brûleur + coupe-faim. Vente en pack.',q:'« Je vous fais un programme sur mesure »'},
+      {i:'⚠️',t:'Positionnement éthique',d:'Toujours associer avec alimentation équilibrée et activité physique. Vendre du soutien, pas des miracles.',q:'« En complément d'une bonne hygiène de vie »'},
+     ]},
+    {th:'t2',em:'🛡️',cat:'Bien-être',nm:'Immunité & Défenses',sl:'Protection',sv:'Naturel',chip:'Immunité',r:200,g:80,b:200,
+     hero:{v:'Immunité',l:'Vitamines · Minéraux · Plantes adaptogènes'},flow:null,
+     items:[
+      {i:'🛡️',t:'Vitamine C naturelle',d:'Extrait d'acérola, baie de sureau — vitamine C naturelle bien mieux assimilée que la synthétique.',q:'« La vraie vitamine C »'},
+      {i:'🌿',t:'Plantes adaptogènes',d:'Rhodiola, ashwagandha, ginseng — adaptent l'organisme au stress et renforcent la résistance.',q:'« S'adapter à tout »'},
+      {i:'🦠',t:'Probiotiques',d:'Flore intestinale = 70% de l'immunité. Les probiotiques Chogan renforcent les défenses de l'intérieur.',q:'« L'immunité commence dans l'intestin »'},
+      {i:'☀️',t:'Vitamine D3 + K2',d:'Le duo vitamines D3/K2 pour l'immunité, les os et le moral. Indispensable en automne-hiver.',q:'« L'essentiel pour l'hiver »'},
+      {i:'🌙',t:'Zinc & Sélénium',d:'Minéraux essentiels au bon fonctionnement du système immunitaire.',q:'« Les gardiens de votre santé »'},
+      {i:'💡',t:'Vente saisonnière',d:'Octobre-novembre : moment clé pour vendre les boosters immunité avant l'hiver.',q:'« Préparez-vous avant l'hiver »'},
+     ]},
+    {th:'t5',em:'💊',cat:'Bien-être',nm:'Conseils Compléments',sl:'Méthode',sv:'Programme',chip:'Conseil',r:30,g:185,b:200,
+     hero:{v:'Conseil',l:'Identifier · Programmer · Fidéliser'},flow:null,
+     items:[
+      {i:'🔍',t:'Identifier le besoin',d:'5 questions clés : fatigue ? stress ? sommeil ? poids ? immunité ? Le besoin détermine la vente.',q:'« Qu'est-ce qui vous pèse le plus ? »'},
+      {i:'📋',t:'Proposer un programme',d:'Ne pas vendre un produit isolé mais un programme de 1-3 mois. Meilleur résultat et meilleure fidélisation.',q:'« Je vous fais un programme »'},
+      {i:'📊',t:'Suivi client',d:'Recontacter à J+15 et J+30 pour voir les progrès. Le suivi multiplie les renouvellements.',q:'« Comment vous sentez-vous après 2 semaines ? »'},
+      {i:'💰',t:'Argument économique',d:'Compléments Chogan vs pharmacie : même qualité, 30 à 50% moins cher.',q:'« Même qualité qu'en pharmacie, moins cher »'},
+      {i:'🤝',t:'Témoignages',d:'Les compléments alimentaires se vendent sur les résultats. Toujours avoir 2-3 témoignages clients.',q:'« J'ai une cliente qui a... »'},
+      {i:'🔄',t:'Abonnement mensuel',d:'C'est la meilleure façon de fidéliser. Proposer la commande automatique mensuelle.',q:'« Je vous programme ça automatiquement »'},
+     ]},
    ]},
 ];
 
+
 /* ═══════════════════════════════════════════
-   WALLET ENGINE
+   WALLET ENGINE — 2 LEVELS
 ═══════════════════════════════════════════ */
-let cur=0,sy=0,drag=false,dd=0;
+let cur=0, sy=0, drag=false, dd=0;
+let subCur=0, subSy=0, subDrag=false, subDd=0;
 const PEEK=16;
 let built=false;
 
+/* ── LEVEL 1: Category stack ── */
 function buildWallet(){
   if(built) return; built=true;
   const se=document.getElementById('stack'), de=document.getElementById('dots');
-  CARDS.forEach((c,i)=>{
+  CATEGORIES.forEach((cat,i)=>{
     const el=document.createElement('div');
-    el.className='wcard '+c.th; el.id='wc'+i;
+    el.className='wcard '+cat.th; el.id='wc'+i;
     el.innerHTML=`<div class="ci">
-      <div class="cb1" style="width:160px;height:160px;background:rgba(${c.r},${c.g},${c.b},.9);top:-50px;right:-40px"></div>
-      <div class="cb2" style="width:80px;height:80px;background:rgba(${c.r},${c.g},${c.b},.8);bottom:-20px;left:30px"></div>
-      <div class="ct"><div><div class="ct-c">${c.cat}</div><div class="ct-n">${c.nm}</div></div><div class="ct-i">${c.em}</div></div>
-      <div class="cbx"><div><div class="cb-sl">${c.sl}</div><div class="cb-sv">${c.sv}</div></div>
-      <div class="cb-ch"><div class="cd" style="background:rgba(${c.r},${c.g},${c.b},.9)"></div>${c.chip}</div></div></div>`;
-    el.addEventListener('click',()=>{ if(i===cur&&Math.abs(dd)<6) openCard(c); else if(i!==cur) go(i); });
+      <div class="cb1" style="width:160px;height:160px;background:rgba(${cat.r},${cat.g},${cat.b},.9);top:-50px;right:-40px"></div>
+      <div class="cb2" style="width:80px;height:80px;background:rgba(${cat.r},${cat.g},${cat.b},.8);bottom:-20px;left:30px"></div>
+      <div class="ct">
+        <div>
+          <div class="ct-c">Wallet Chogan</div>
+          <div class="ct-n">${cat.nm}</div>
+        </div>
+        <div class="ct-i">${cat.em}</div>
+      </div>
+      <div class="cbx">
+        <div>
+          <div class="cb-sl">Contenu</div>
+          <div class="cb-sv">6 cartes</div>
+        </div>
+        <div class="cb-ch">
+          <div class="cd" style="background:rgba(${cat.r},${cat.g},${cat.b},.9)"></div>
+          ${cat.chip}
+        </div>
+      </div>
+    </div>`;
+    el.addEventListener('click',()=>{
+      if(i===cur && Math.abs(dd)<6) openCategory(cat);
+      else if(i!==cur) go(i);
+    });
     se.appendChild(el);
     const d=document.createElement('div');
-    d.className='dot'+(i===0?' on':''); d.id='dt'+i; d.onclick=()=>go(i);
+    d.className='dot'+(i===0?' on':'');
+    d.id='dt'+i; d.onclick=()=>go(i);
     de.appendChild(d);
   });
   pos(false);
 }
 
 function pos(anim=true){
-  CARDS.forEach((_,i)=>{
+  CATEGORIES.forEach((_,i)=>{
     const el=document.getElementById('wc'+i); if(!el) return;
     const diff=i-cur;
     let top,scale,opacity;
     if(diff===0){top=14;scale=1;opacity=1}
-    else if(diff<0){top=-200;scale=1;opacity=0}
+    else if(diff<0){top=-210;scale=1;opacity=0}
     else{top=14+diff*PEEK;scale=1-diff*.04;opacity=diff<=3?1-diff*.2:0}
     el.style.transition=anim?'top .42s cubic-bezier(.4,0,.2,1),transform .42s,opacity .32s':'none';
-    el.style.top=top+'px';el.style.transform=`scale(${scale})`;el.style.opacity=opacity;
-    el.style.zIndex=CARDS.length-Math.abs(i-cur);
+    el.style.top=top+'px'; el.style.transform=`scale(${scale})`; el.style.opacity=opacity;
+    el.style.zIndex=CATEGORIES.length-Math.abs(i-cur);
     const d=document.getElementById('dt'+i);
     if(d) d.className='dot'+(i===cur?' on':'');
   });
 }
-function go(i){ if(i<0||i>=CARDS.length)return; cur=i; pos(true); }
 
+function go(i){
+  if(i<0||i>=CATEGORIES.length) return;
+  cur=i; pos(true);
+}
+
+/* ── Touch on main stack ── */
 const st=document.getElementById('stack');
 st.addEventListener('touchstart',e=>{sy=e.touches[0].clientY;drag=true;dd=0},{passive:true});
 st.addEventListener('touchmove',e=>{if(!drag)return;dd=e.touches[0].clientY-sy},{passive:true});
 st.addEventListener('touchend',()=>{
-  if(!drag)return;drag=false;
-  if(dd<-50&&cur<CARDS.length-1)go(cur+1);
-  else if(dd>50&&cur>0)go(cur-1);
+  if(!drag)return; drag=false;
+  if(dd<-50&&cur<CATEGORIES.length-1) go(cur+1);
+  else if(dd>50&&cur>0) go(cur-1);
   dd=0;
 });
 
+/* ── LEVEL 2: Open category → sub-wallet ── */
+function openCategory(cat){
+  subCur=0;
+  const ss=document.getElementById('sub-screen');
+  document.getElementById('sub-title').textContent=cat.nm;
+  document.getElementById('wh-title').textContent=cat.nm;
+
+  // Build sub-stack
+  const se=document.getElementById('sub-stack'), de=document.getElementById('sub-dots');
+  se.innerHTML=''; de.innerHTML='';
+
+  cat.cards.forEach((c,i)=>{
+    const el=document.createElement('div');
+    el.className='wcard '+c.th; el.id='swc'+i;
+    el.innerHTML=`<div class="ci">
+      <div class="cb1" style="width:160px;height:160px;background:rgba(${c.r},${c.g},${c.b},.9);top:-50px;right:-40px"></div>
+      <div class="cb2" style="width:80px;height:80px;background:rgba(${c.r},${c.g},${c.b},.8);bottom:-20px;left:30px"></div>
+      <div class="ct">
+        <div>
+          <div class="ct-c">${c.cat}</div>
+          <div class="ct-n">${c.nm}</div>
+        </div>
+        <div class="ct-i">${c.em}</div>
+      </div>
+      <div class="cbx">
+        <div>
+          <div class="cb-sl">${c.sl}</div>
+          <div class="cb-sv">${c.sv}</div>
+        </div>
+        <div class="cb-ch">
+          <div class="cd" style="background:rgba(${c.r},${c.g},${c.b},.9)"></div>
+          ${c.chip}
+        </div>
+      </div>
+    </div>`;
+    el.addEventListener('click',()=>{
+      if(i===subCur && Math.abs(subDd)<6) openCard(c);
+      else if(i!==subCur) subGo(i);
+    });
+    se.appendChild(el);
+    const d=document.createElement('div');
+    d.className='dot'+(i===0?' on':'');
+    d.id='sdt'+i; d.onclick=()=>subGo(i);
+    de.appendChild(d);
+  });
+  subPos(false);
+
+  // Slide in from right
+  ss.style.transform='translateX(100%)';
+  ss.style.display='flex';
+  requestAnimationFrame(()=>{
+    ss.style.transition='transform .42s cubic-bezier(.4,0,.2,1)';
+    ss.style.transform='translateX(0)';
+  });
+}
+
+function closeCategory(){
+  const ss=document.getElementById('sub-screen');
+  ss.style.transition='transform .38s cubic-bezier(.4,0,.2,1)';
+  ss.style.transform='translateX(100%)';
+  document.getElementById('wh-title').textContent='Catalogue';
+  setTimeout(()=>{ ss.style.display='none'; subCur=0; }, 400);
+}
+
+function subPos(anim=true){
+  const se=document.getElementById('sub-stack');
+  if(!se) return;
+  const cards=se.querySelectorAll('.wcard');
+  cards.forEach((el,i)=>{
+    const diff=i-subCur;
+    let top,scale,opacity;
+    if(diff===0){top=14;scale=1;opacity=1}
+    else if(diff<0){top=-210;scale=1;opacity=0}
+    else{top=14+diff*PEEK;scale=1-diff*.04;opacity=diff<=3?1-diff*.2:0}
+    el.style.transition=anim?'top .42s cubic-bezier(.4,0,.2,1),transform .42s,opacity .32s':'none';
+    el.style.top=top+'px'; el.style.transform=`scale(${scale})`; el.style.opacity=opacity;
+    el.style.zIndex=10-Math.abs(i-subCur);
+    const d=document.getElementById('sdt'+i);
+    if(d) d.className='dot'+(i===subCur?' on':'');
+  });
+}
+
+function subGo(i){
+  const se=document.getElementById('sub-stack');
+  if(!se) return;
+  const n=se.querySelectorAll('.wcard').length;
+  if(i<0||i>=n) return;
+  subCur=i; subPos(true);
+}
+
+/* ── Touch on sub-stack ── */
+const sst=document.getElementById('sub-stack');
+sst.addEventListener('touchstart',e=>{subSy=e.touches[0].clientY;subDrag=true;subDd=0},{passive:true});
+sst.addEventListener('touchmove',e=>{if(!subDrag)return;subDd=e.touches[0].clientY-subSy},{passive:true});
+sst.addEventListener('touchend',()=>{
+  if(!subDrag)return; subDrag=false;
+  const se=document.getElementById('sub-stack');
+  const n=se?se.querySelectorAll('.wcard').length:0;
+  if(subDd<-50&&subCur<n-1) subGo(subCur+1);
+  else if(subDd>50&&subCur>0) subGo(subCur-1);
+  subDd=0;
+});
+
+/* ── LEVEL 3: Detail sheet ── */
 function openCard(c){ trackCard(c);
   const {r,g,b}=c;
   const ib=`rgba(${r},${g},${b},.15)`;
@@ -793,18 +1219,14 @@ function openCard(c){ trackCard(c);
     </div>${flow}<div class="shbody">${rows}</div>`;
   document.getElementById('dpanel').classList.add('open');
 }
-function cls(){ document.getElementById('dpanel').classList.remove('open'); }
-const ds2=document.getElementById('dsheet');
-let dsy=0;
-ds2.addEventListener('touchstart',e=>{dsy=e.touches[0].clientY},{passive:true});
-ds2.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-dsy>80)cls()},{passive:true});
 
 /* ═══════════════════════════════════════════
    CLOCK & TOAST
 ═══════════════════════════════════════════ */
 function tick(){
-  const n=new Date(),el=document.getElementById('clk');
-  if(el)el.textContent=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');
+  const n=new Date();
+  const t=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');
+  ['clk','sub-clk'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=t; });
 }
 tick();setInterval(tick,15000);
 
