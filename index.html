@@ -461,7 +461,7 @@ partagez-lui le code : ${ACCESS_CODE}
     if(d.success){
       const req={name,contact,date,did:DID};
       LS.s('pr',req);
-      toast('Email envoyé à l\'admin ✓','ok');
+      toast("Email envoyé à l'admin ✓","ok");
       setTimeout(()=>showPend(req),700);
     } else {
       throw new Error(d.message||'Échec');
@@ -638,7 +638,7 @@ const CATEGORIES=[
     {th:"t1",em:"🔢",cat:"Guide de Vente",nm:"Chiffres Clés",sl:"Concentration",sv:"30%",chip:"5 chiffres",r:80,g:130,b:255,
      hero:{v:"30%",l:"Concentration en extrait de parfum"},flow:null,
      items:[
-      {i:"30%",t:"30% d\'extrait de parfum",d:"Contre 12-15% chez les grandes marques. Concentration professionnelle."},
+      {i:"30%",t:"30% d'extrait de parfum",d:"Contre 12-15% chez les grandes marques. Concentration professionnelle."},
       {i:"24h",t:"8 à 24h de tenue",d:"Grâce à la concentration élevée. Plus besoin de reappliquer."},
       {i:"-70",t:"-70% d'économie",d:"En moyenne vs parfumeries. Exemple : 29€ ici vs 120€ en boutique."},
       {i:"0€",t:"Zéro budget publicité",d:"L'argent va dans les essences, pas la communication.",q:"« 100% qualité, 0% marketing »"},
@@ -697,7 +697,7 @@ const CATEGORIES=[
       {i:"🍊",t:"Gamme fruitée",d:"Notes de bergamote, pêche, litchi — fraîcheur et vitalité pour toutes saisons.",q:"« Fraîcheur et gourmandise »"},
       {i:"🌙",t:"Gamme orientale",d:"Oud, ambre, vanille — les parfums envoûtants et sensuels pour les soirées.",q:"« Mystère et séduction »"},
       {i:"💎",t:"Gamme prestige",d:"Inspirations des plus grands : Chanel N°5, Miss Dior, La Vie est Belle... à -70%.",q:"« Le luxe accessible »"},
-      {i:"30%",t:"Argument clé",d:"30% d\'extrait = sillage intense et longue tenue. Appliquer sur les points de chaleur.',q:"« Appliquez sur le cou et les poignets »"},
+      {i:"30%",t:"Argument clé",d:"30% d'extrait = sillage intense et longue tenue. Appliquer sur les points de chaleur.",q:"« Appliquez sur le cou et les poignets »"},
       {i:"💶",t:"Prix & Positionnement",d:"29€ en moyenne pour une tenue 8-24h. Proposer la gamme comme alternative intelligente.",q:"« Même odeur, pas le même prix »"},
      ]},
     {th:"t1",em:"🧔",cat:"Parfumerie",nm:"Parfums Homme",sl:"Collection",sv:"Masculin",chip:"Homme",r:80,g:130,b:255,
@@ -708,7 +708,7 @@ const CATEGORIES=[
       {i:"🌿",t:"Gamme aromatique",d:"Lavande, menthe, eucalyptus — les classiques intemporels et polyvalents.",q:"« Le classique indémodable »"},
       {i:"💎",t:"Gamme prestige",d:"Inspirations Dior Sauvage, Bleu de Chanel, Armani Code... à prix Chogan.",q:"« Le prestige sans se ruiner »"},
       {i:"🎁",t:"Idée cadeau homme",d:"Les parfums homme se vendent très bien pour Noël, fête des pères, anniversaires.",q:"« Le cadeau qui fait toujours effet »"},
-      {i:"⏱",t:"Tenue & Application",d:"30% d\'extrait — tenue garantie 8-24h. Appliquer sur la peau, pas sur les vêtements.',q:"« Sur la peau uniquement »"},
+      {i:"⏱",t:"Tenue & Application",d:"30% d'extrait — tenue garantie 8-24h. Appliquer sur la peau, pas sur les vêtements.",q:"« Sur la peau uniquement »"},
      ]},
     {th:"t3",em:"👶",cat:"Parfumerie",nm:"Parfums Enfant",sl:"Collection",sv:"Doux",chip:"Enfant",r:30,g:180,b:120,
      hero:{v:"Enfant",l:"Fragrances douces · Hypoallergéniques"},flow:null,
@@ -736,7 +736,7 @@ const CATEGORIES=[
       {i:"🌍",t:"Grasse — Capital mondial",d:"Grasse dans les Alpes-Maritimes est la capitale mondiale du parfum depuis le XVIe siècle.",q:"« Là où naissent les plus grands parfums »"},
       {i:"🏭",t:"FragWorld — notre fournisseur",d:"Chogan s'approvisionne chez FragWorld à Grasse — le même fournisseur que Chanel, Dior, Hermès.",q:"« Même source que les grandes maisons »"},
       {i:"🌹",t:"Qualité des essences",d:"Essences naturelles et de synthèse de qualité premium. Même matières premières, procédés identiques.",q:"« Qualité luxe, prix Chogan »"},
-      {i:"🔬",t:"30% de concentration",d:"Grâce à la qualité des essences, Chogan peut proposer 30% d\'extrait contre 12-15% ailleurs.",q:"« Plus de concentration = plus de tenue »"},
+      {i:"🔬",t:"30% de concentration",d:"Grâce à la qualité des essences, Chogan peut proposer 30% d'extrait contre 12-15% ailleurs.",q:"« Plus de concentration = plus de tenue »"},
       {i:"💰",t:"Pourquoi moins cher ?",d:"Pas d'égéries (millions €), pas de pub TV, pas de packaging luxe inutile. Tout va dans le flacon.",q:"« Marketing zéro, qualité maximale »"},
       {i:"✅",t:"Argument anti-contrefaçon",d:"Légal, traçable, certifié. Inspiration légale — comme Zara inspire les maisons de mode.",q:"« Inspiration légale, pas de contrefaçon »"},
      ]},
