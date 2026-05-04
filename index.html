@@ -576,7 +576,10 @@ function getConsultantName(){
 ═══════════════════════════════════════════ */
 function showAdminPw(){
   document.getElementById('apov').classList.add('show');
-  setTimeout(()=>document.getElementById('apw').focus(),300);
+  setTimeout(()=>{
+    const el=document.getElementById('apw');
+    if(el){ el.focus(); el.onkeydown=e=>{if(e.key==='Enter')checkAdminPw();}; }
+  },300);
 }
 function closeAdminPw(){
   document.getElementById('apov').classList.remove('show');
@@ -592,7 +595,7 @@ function checkAdminPw(){
     document.getElementById('apw').value='';
   }
 }
-document.getElementById('apw').addEventListener('keydown',e=>{if(e.key==='Enter')checkAdminPw()});
+// apw listener added in showAdminPw() call
 
 
 
@@ -1098,6 +1101,11 @@ function buildWallet(){
     de.appendChild(d);
   });
   pos(false);
+  // Build elevator after DOM is populated
+  setTimeout(()=>{
+    mainThumbUpdater = buildElevator('stack','dots',go,()=>CATEGORIES.length);
+    if(mainThumbUpdater) mainThumbUpdater(cur, CATEGORIES.length);
+  }, 50);
 }
 
 function pos(anim=true){
@@ -1267,8 +1275,8 @@ function toast(msg,type='in'){
 /* ═══════════════════════════════════════════
    KEY LISTENERS
 ═══════════════════════════════════════════ */
-document.getElementById('uc').addEventListener('keydown',e=>{if(e.key==='Enter')tryUnlock('uc')});
-document.getElementById('pc').addEventListener('keydown',e=>{if(e.key==='Enter')tryUnlock('pc')});
+try{document.getElementById('uc').addEventListener('keydown',e=>{if(e.key==='Enter')tryUnlock('uc')});}catch(e){}
+try{document.getElementById('pc').addEventListener('keydown',e=>{if(e.key==='Enter')tryUnlock('pc')});}catch(e){}
 document.addEventListener('touchstart',()=>{
   const h=document.getElementById('hint');if(h)h.style.opacity='0';
 },{once:true,passive:true});
@@ -1387,11 +1395,13 @@ Rapport automatique — Wallet Chogan`;
 }
 
 // Send report when app goes background or closes
-document.addEventListener('visibilitychange', () => {
-  if(document.visibilityState === 'hidden') sendSessionReport();
-});
-window.addEventListener('pagehide', sendSessionReport);
-window.addEventListener('beforeunload', sendSessionReport);
+try{
+  document.addEventListener('visibilitychange', () => {
+    if(document.visibilityState === 'hidden') sendSessionReport();
+  });
+  window.addEventListener('pagehide', sendSessionReport);
+  window.addEventListener('beforeunload', sendSessionReport);
+}catch(e){}
 
 function clearAllHist(){ toast("Pas d'historique à effacer","in"); }
 
@@ -1451,4 +1461,3 @@ init();
 </script>
 </body>
 </html>
-
