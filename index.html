@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Wallet Chogan Pro</title>
+<title>Wallet Chogan Business</title>
 
 <script>
 /* 🔧 CONFIGURATION */
@@ -28,37 +28,37 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
 .screen{position:fixed;inset:0;display:flex;flex-direction:column;transition:0.38s}
 .hidden{opacity:0;pointer-events:none;transform:scale(0.96)}
 
-/* NAVIGATION PILLS */
-.wallet-nav{display:flex;gap:8px;padding:10px 20px;overflow-x:auto;flex-shrink:0}
-.pill{padding:8px 16px;border-radius:20px;background:rgba(255,255,255,.06);border:0.5px solid rgba(255,255,255,.15);color:var(--muted);font-size:13px;font-weight:600;white-space:nowrap;transition:0.2s}
+/* NAV */
+.wallet-nav{display:flex;gap:8px;padding:10px 20px;overflow-x:auto;flex-shrink:0;scrollbar-width:none}
+.wallet-nav::-webkit-scrollbar{display:none}
+.pill{padding:8px 16px;border-radius:20px;background:rgba(255,255,255,.06);border:0.5px solid rgba(255,255,255,.15);color:var(--muted);font-size:12px;font-weight:700;white-space:nowrap;transition:0.2s}
 .pill.active{background:var(--gold);color:#000;border-color:var(--gold)}
 
-/* STACK & SCROLL (L'ASCENSEUR) */
-.elevator{flex:1;overflow-y:auto;position:relative;padding-bottom:100px;perspective:1000px}
+/* ELEVATOR (L'ASCENSEUR) */
+.elevator{flex:1;overflow-y:auto;position:relative;padding-bottom:120px}
 .elevator::-webkit-scrollbar{display:none}
 
-.wcard{position:absolute;left:15px;right:15px;height:180px;border-radius:24px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.5);transition:transform 0.3s}
+.wcard{position:absolute;left:15px;right:15px;height:160px;border-radius:24px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.5);transition:transform 0.3s}
 .ci{padding:20px;height:100%;display:flex;flex-direction:column;justify-content:space-between}
-.ct-n{font-size:20px;font-weight:800;letter-spacing:-0.5px}
-.ct-c{font-size:10px;text-transform:uppercase;opacity:0.6;font-weight:700}
+.ct-n{font-size:19px;font-weight:800;letter-spacing:-0.5px}
+.ct-c{font-size:9px;text-transform:uppercase;opacity:0.6;font-weight:700;letter-spacing:1px}
 
-/* CARD COLORS */
-.t1{background:linear-gradient(135deg,#1a3380,#0a1840)}
-.t2{background:linear-gradient(135deg,#4a1580,#1a0835)}
-.t3{background:linear-gradient(135deg,#0e5c3a,#052818)}
-.t4{background:linear-gradient(135deg,#7a3010,#2e1005)}
-.t5{background:linear-gradient(135deg,#0b5060,#031e28)}
-.t6{background:linear-gradient(135deg,#7a1010,#2e0505)}
+/* COLORS */
+.t1{background:linear-gradient(135deg,#1a3380,#0a1840)} /* Bleu - Sécurité */
+.t2{background:linear-gradient(135deg,#4a1580,#1a0835)} /* Violet - Orgueil */
+.t3{background:linear-gradient(135deg,#0e5c3a,#052818)} /* Vert - Nouveauté */
+.t4{background:linear-gradient(135deg,#7a3010,#2e1005)} /* Marron - Confort */
+.t5{background:linear-gradient(135deg,#0b5060,#031e28)} /* Cyan - Argent */
+.t6{background:linear-gradient(135deg,#7a1010,#2e0505)} /* Rouge - Sympathie */
 
-/* SHEET DETAIL */
+/* SHEET */
 #dpanel{position:fixed;inset:0;z-index:100;pointer-events:none}
 #dov{position:absolute;inset:0;background:rgba(0,0,0,0);transition:0.4s}
-#dsheet{position:absolute;bottom:0;left:0;right:0;background:#1a1a26;border-radius:30px 30px 0 0;transform:translateY(100%);transition:0.4s cubic-bezier(0.4, 0, 0.2, 1);max-height:85vh;overflow-y:auto;padding:20px}
+#dsheet{position:absolute;bottom:0;left:0;right:0;background:#1a1a26;border-radius:30px 30px 0 0;transform:translateY(100%);transition:0.4s cubic-bezier(0.4, 0, 0.2, 1);max-height:85vh;overflow-y:auto;padding:25px}
 #dpanel.open{pointer-events:all}
 #dpanel.open #dov{background:rgba(0,0,0,0.7)}
 #dpanel.open #dsheet{transform:translateY(0)}
 
-/* UI ELEMENTS */
 .btn-g{width:100%;padding:16px;border-radius:15px;background:linear-gradient(135deg,#c9a84c,#8b5e1a);border:none;color:#fff;font-size:16px;font-weight:700;margin-top:10px}
 .finput{width:100%;background:var(--card);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:15px;color:#fff;margin-bottom:15px;text-align:center}
 #toast{position:fixed;top:40px;left:20px;right:20px;padding:15px;border-radius:12px;text-align:center;transform:translateY(-200%);transition:0.4s;z-index:999;font-weight:bold}
@@ -67,35 +67,32 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="lock" class="screen">
     <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
         <div style="font-size:60px">💼</div>
         <h1 style="margin-top:20px">Wallet Chogan</h1>
     </div>
     <div style="padding:30px;background:var(--surface);border-radius:30px 30px 0 0">
-        <input class="finput" id="uc" type="password" placeholder="CODE D'ACCÈS">
-        <button class="btn-g" onclick="tryUnlock()">OUVRIR LE WALLET</button>
+        <input class="finput" id="uc" type="password" placeholder="CODE ACCÈS">
+        <button class="btn-g" onclick="tryUnlock()">DÉVERROUILLER</button>
     </div>
 </div>
 
-<!-- MAIN APP -->
 <div id="main" class="screen hidden">
     <div style="padding:calc(20px + var(--st)) 20px 10px;display:flex;justify-content:space-between;align-items:center">
-        <h2 id="wh-title" style="font-size:24px;font-weight:800">Catalogue</h2>
+        <h2 id="wh-title" style="font-size:24px;font-weight:800">Business</h2>
         <div onclick="avTap()" style="width:40px;height:40px;border-radius:50%;background:var(--gold);color:#000;display:flex;align-items:center;justify-content:center;font-weight:900;cursor:pointer">WC</div>
     </div>
 
     <div class="wallet-nav">
-        <div class="pill" id="p-knowledge" onclick="switchWallet('knowledge')">🧠 GUIDE VENTE</div>
+        <div class="pill" id="p-knowledge" onclick="switchWallet('knowledge')">🧠 SONCAS</div>
         <div class="pill active" id="p-products" onclick="switchWallet('products')">🛍️ PRODUITS</div>
-        <div class="pill" id="p-scripts" onclick="switchWallet('scripts')">📝 PROSPECTION B2B</div>
+        <div class="pill" id="p-scripts" onclick="switchWallet('scripts')">📝 B2B SCRIPTS</div>
     </div>
 
     <div class="elevator" id="stack"></div>
 </div>
 
-<!-- DETAILS -->
 <div id="dpanel">
     <div id="dov" onclick="cls()"></div>
     <div id="dsheet">
@@ -109,47 +106,71 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
 <script>
 const WALLETS = {
     knowledge: [
-        { t: "L'Histoire Chogan", s: "Savoir", c: "t1", e: "📜", items: [
-            { n: "Fondation", d: "Entreprise italienne créée en 2013 par Michelangelo Paradiso.", q: "Identité" },
-            { n: "Fragworld", d: "Partenariat exclusif avec le leader mondial à Grasse pour les essences.", q: "Qualité" }
+        { t: "S - Sécurité", s: "SONCAS", c: "t1", e: "🛡️", items: [
+            { n: "Besoin", d: "Rassurer sur la qualité, la tenue et la provenance.", q: "Argument" },
+            { n: "Réponse Chogan", d: "Certification Bio, Fragworld (Grasse), extraits à 30% d'essence.", q: "Solution" }
         ]},
-        { t: "Traitement Objections", s: "Vente", c: "t2", e: "💬", items: [
-            { n: "Objection : Le Prix", d: "Expliquer l'absence de marketing, de stars et d'intermédiaires.", q: "Argument" },
-            { n: "Objection : Tenue", d: "Nos parfums sont des 'Extraits' (30% essence), ils durent plus longtemps.", q: "Argument" }
+        { t: "O - Orgueil", s: "SONCAS", c: "t2", e: "👑", items: [
+            { n: "Besoin", d: "Se sentir privilégié, posséder un produit de luxe.", q: "Argument" },
+            { n: "Réponse Chogan", d: "Gamme Luxury, flacons exclusifs, inspirations haute couture.", q: "Solution" }
+        ]},
+        { t: "N - Nouveauté", s: "SONCAS", c: "t3", e: "✨", items: [
+            { n: "Besoin", d: "Changer ses habitudes, tester les dernières sorties.", q: "Argument" },
+            { n: "Réponse Chogan", d: "Nouveaux parfums chaque mois, technologies de pointe (Bave escargot).", q: "Solution" }
+        ]},
+        { t: "C - Confort", s: "SONCAS", c: "t4", e: "🛋️", items: [
+            { n: "Besoin", d: "Simplicité d'achat, livraison à domicile, facilité d'usage.", q: "Argument" },
+            { n: "Réponse Chogan", d: "Site intuitif, livraison rapide, produits efficaces dès la 1ère application.", q: "Solution" }
+        ]},
+        { t: "A - Argent", s: "SONCAS", c: "t5", e: "💰", items: [
+            { n: "Besoin", d: "Faire des économies, meilleur rapport qualité/prix.", q: "Argument" },
+            { n: "Réponse Chogan", d: "Prix direct usine (pas de marketing), 3 à 4 fois moins cher que le luxe.", q: "Solution" }
+        ]},
+        { t: "S - Sympathie", s: "SONCAS", c: "t6", e: "🤝", items: [
+            { n: "Besoin", d: "Relation humaine, conseil personnalisé, éthique.", q: "Argument" },
+            { n: "Réponse Chogan", d: "Consultante dédiée, produits non testés sur les animaux.", q: "Solution" }
         ]}
     ],
     products: [
-        { t: "Parfums Luxury", s: "Extraits de parfum", c: "t1", e: "💎", items: [
-            { n: "Luxury Homme", d: "Inspirations prestigieuses, tenue extrême 24h.", q: "30% Essence" },
-            { n: "Luxury Femme", d: "Élégance absolue, flacons design de collection.", q: "Luxe" }
+        { t: "Parfumerie", s: "Catégorie 1", c: "t1", e: "🧴", items: [
+            { n: "Extraits de Parfum", d: "Plus de 130 inspirations (H/F/U) à 30% d'essence de Grasse.", q: "Tenue 24h" },
+            { n: "Gamme Luxury", d: "Flacons dorés, essences rares et packaging premium.", q: "Prestige" }
         ]},
-        { t: "Soins Visage", s: "Bave d'escargot", c: "t2", e: "✨", items: [
-            { n: "Crème 75% Bave", d: "Régénère, traite l'acné, les taches et rides.", q: "Bio-certifié" },
-            { n: "Sérum Anti-âge", d: "Effet tenseur immédiat à l'acide hyaluronique.", q: "Efficace" }
+        { t: "Soins Visage/Corps", s: "Catégorie 2", c: "t2", e: "✨", items: [
+            { n: "Bave d'Escargot", d: "Régénération cellulaire, anti-taches, anti-rides.", q: "Bio" },
+            { n: "Huile de Neem", d: "Soin des peaux à problèmes (eczéma, acné, psoriasis).", q: "Soin" }
         ]},
-        { t: "Maison / Home", s: "Entretien Pro", c: "t5", e: "🏠", items: [
-            { n: "Degreaser Plus", d: "Dégraissant alimentaire surpuissant.", q: "Indispensable" },
-            { n: "Bagnolux", d: "Anti-calcaire brillant spécial robinetterie.", q: "Top Vente" }
+        { t: "Entretien Maison", s: "Catégorie 3", c: "t5", e: "🏠", items: [
+            { n: "HACCP Professionnel", d: "Dégraissants (Degreaser), anti-calcaires (Bagnolux).", q: "Efficacité" },
+            { n: "Parfums d'ambiance", d: "Diffuseurs et sprays textiles ultra-concentrés.", q: "Atmosphère" }
+        ]},
+        { t: "Maquillage Pro", s: "Catégorie 4", c: "t2", e: "💄", items: [
+            { n: "Ligne Peau", d: "Fonds de teint haute couvrance, poudres minérales.", q: "Maquillage" },
+            { n: "Lèvres & Yeux", d: "Rouges à lèvres sans transfert, mascaras volumisants.", q: "Qualité" }
+        ]},
+        { t: "Hygiène & Bien-être", s: "Catégorie 5", c: "t4", e: "🌿", items: [
+            { n: "Huiles Essentielles", d: "100% pures et naturelles pour aromathérapie.", q: "Santé" },
+            { n: "Gels Douche", d: "Parfumés avec vos fragrances préférées.", q: "Quotidien" }
+        ]},
+        { t: "Compléments & Solaire", s: "Catégorie 6", c: "t3", e: "☀️", items: [
+            { n: "Suppléments", d: "Café bien-être, Aloe Vera à boire, brûle-graisses.", q: "Nutrition" },
+            { n: "Protection Solaire", d: "Filtres UV haute protection et accélérateurs de bronzage.", q: "Été" }
         ]}
     ],
     scripts: [
-        { t: "Salon de Coiffure", s: "Prospection", c: "t1", e: "💇", items: [
-            { n: "L'Opportunité", d: "Vendre un parfum pendant que le client attend sa coupe.", q: "Revenu Complémentaire" },
-            { n: "Argument Choc", d: "Proposez une alternative de luxe à 30€ alors que les clients payent 120€ ailleurs.", q: "Marge" },
-            { n: "Le Script", d: "« J'aide les salons à augmenter leur bénéfice net de 20% sans faire une seule coupe de plus. Ça vous intéresse ? »", q: "Approche" }
+        { t: "Coiffeur / Barbier", s: "Script B2B", c: "t1", e: "💇", items: [
+            { n: "Accroche", d: "« J'aide les salons à augmenter leur panier moyen sans temps de travail en plus. »", q: "Business" },
+            { n: "Argument", d: "Mise à disposition de testeurs pour que le client achète pendant sa coupe.", q: "Marge 50%" }
         ]},
-        { t: "Esthéticienne", s: "Prospection", c: "t2", e: "🧖", items: [
-            { n: "Utilisation Cabine", d: "Utilisez les huiles (Neem, Argan) Chogan durant vos soins.", q: "Qualité Pro" },
-            { n: "Cadeau Client", d: "Offrez un échantillon pour fidéliser après une prestation.", q: "Marketing" },
-            { n: "Le Script", d: "« Vos clientes adorent vos soins, proposez-leur de prolonger l'expérience olfactive chez elles. »", q: "Approche" }
+        { t: "Institut de Beauté", s: "Script B2B", c: "t2", e: "🧖", items: [
+            { n: "Accroche", d: "« Vos clientes cherchent des produits Bio et efficaces à prix juste. »", q: "Business" },
+            { n: "Argument", d: "Gamme à la bave d'escargot pour prolonger les soins cabine chez soi.", q: "Complément" }
         ]},
-        { t: "Salles de Sport", s: "Prospection", c: "t3", e: "🏋️", items: [
-            { n: "Hygiène Premium", d: "Gels douche parfumés et déodorants haute tenue.", q: "Performance" },
-            { n: "Le Script", d: "« Vos membres veulent se sentir frais après l'effort. Chogan offre le luxe accessible dans le sac de sport. »", q: "Approche" }
+        { t: "Fleuriste", s: "Script B2B", c: "t3", e: "💐", items: [
+            { n: "Accroche", d: "« Associez le parfum éternel à vos bouquets éphémères. »", q: "Vente croisée" }
         ]},
-        { t: "VTC / Garage", s: "Prospection", c: "t6", e: "🚗", items: [
-            { n: "Expérience Client", d: "Un véhicule qui sent le parfum de luxe = meilleure note.", q: "Service 5*" },
-            { n: "Le Script", d: "« Transformez chaque trajet en expérience sensorielle. Vos clients vous demanderont quelle est cette odeur. »", q: "Approche" }
+        { t: "Salle de Sport", s: "Script B2B", c: "t5", e: "🏋️", items: [
+            { n: "Accroche", d: "« Offrez le luxe de la douche après l'effort avec nos gels parfumés. »", q: "Service" }
         ]}
     ]
 };
@@ -158,7 +179,7 @@ let currentWallet = 'products';
 let history = [];
 
 function tryUnlock() {
-    if(document.getElementById('uc').value === ACCESS_CODE) {
+    if(document.getElementById('uc').value.toUpperCase() === ACCESS_CODE) {
         document.getElementById('lock').classList.add('hidden');
         document.getElementById('main').classList.remove('hidden');
         switchWallet('products');
@@ -180,16 +201,16 @@ function buildStack() {
     data.forEach((cat, i) => {
         const card = document.createElement('div');
         card.className = `wcard ${cat.c}`;
-        card.style.top = (i * 55) + "px"; // L'effet d'ascenseur
+        card.style.top = (i * 45) + "px"; // Ascenseur : décalage visuel
         card.style.zIndex = i;
         card.onclick = () => openCard(i);
-        card.innerHTML = `
-            <div class="ci">
-                <div style="display:flex;justify-content:space-between">
-                    <div><div class="ct-c">${cat.s}</div><div class="ct-n">${cat.t}</div></div>
-                    <div style="font-size:30px">${cat.e}</div>
-                </div>
-            </div>`;
+        card.innerHTML = `<div class="ci">
+            <div style="display:flex;justify-content:space-between">
+                <div><div class="ct-c">${cat.s}</div><div class="ct-n">${cat.t}</div></div>
+                <div style="font-size:28px">${cat.e}</div>
+            </div>
+            <div style="font-size:9px; font-weight:bold; opacity:0.4">DÉTAILS →</div>
+        </div>`;
         stack.appendChild(card);
     });
 }
@@ -198,12 +219,12 @@ function openCard(idx) {
     const cat = WALLETS[currentWallet][idx];
     history.push(cat.t);
     document.getElementById('sc').innerHTML = `
-        <h2 style="margin-bottom:20px; font-size:24px">${cat.t}</h2>
+        <h2 style="margin-bottom:20px; font-size:22px; color:var(--gold)">${cat.t}</h2>
         ${cat.items.map(it => `
             <div style="background:var(--card);padding:18px;border-radius:15px;margin-bottom:12px;border-left:4px solid var(--gold)">
-                <div style="font-size:11px;color:var(--gold);font-weight:800;text-transform:uppercase">${it.q}</div>
-                <div style="font-weight:700;margin:6px 0;font-size:16px">${it.n}</div>
-                <div style="font-size:14px;color:rgba(255,255,255,0.7);line-height:1.5">${it.d}</div>
+                <div style="font-size:10px;color:var(--gold);font-weight:900;text-transform:uppercase">${it.q}</div>
+                <div style="font-weight:700;margin:5px 0;font-size:16px">${it.n}</div>
+                <div style="font-size:14px;color:rgba(255,255,255,0.7);line-height:1.4">${it.d}</div>
             </div>
         `).join('')}
         <button class="btn-g" onclick="cls()">FERMER</button>
@@ -221,7 +242,7 @@ function toast(m, c) {
 }
 
 async function avTap() {
-    if(confirm("Envoyer le rapport d'activité ?")) {
+    if(confirm("Envoyer le rapport d'activité à l'admin ?")) {
         try {
             await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
