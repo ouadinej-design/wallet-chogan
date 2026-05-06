@@ -15,10 +15,10 @@
    ║    🔧 CONFIGURATION À PERSONNALISER      ║
    ╚══════════════════════════════════════════╝ */
 
-const ACCESS_CODE = "CHOGAN2024";           // Code pour les consultantes
-const ADMIN_CODE  = "ADMIN#2025";           // Code SECRET admin
-const ADMIN_EMAIL = "ouadi.nej@gmail.com";  // Réception des rapports
-const W3F_KEY     = "04e1ce0c-3c62-413d-ab06-7fdfe1afd91a"; // Clé Web3Forms
+const ACCESS_CODE = "CHOGAN2024";           
+const ADMIN_CODE  = "ADMIN#2025";           
+const ADMIN_EMAIL = "ouadi.nej@gmail.com"; 
+const W3F_KEY     = "04e1ce0c-3c62-413d-ab06-7fdfe1afd91a"; 
 
 /* ══════════════════════════════════════════ */
 </script>
@@ -40,28 +40,29 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
   transition:opacity .38s,transform .38s;overflow:hidden}
 .screen.hidden{opacity:0;pointer-events:none;transform:scale(.96)}
 
-/* COMPOSANTS FORMS */
+/* COMPOSANTS FORM */
 .form-label{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block}
 .finput{width:100%;background:var(--card);border:0.5px solid rgba(255,255,255,.12);border-radius:12px;padding:14px 16px;color:var(--text);font-size:15px;outline:none;margin-bottom:14px}
-.btn-g{width:100%;padding:15px;border-radius:14px;background:linear-gradient(135deg,#c9a84c,#8b5e1a);border:none;color:#fff;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(201,168,76,.3)}
-.btn-o{width:100%;padding:14px;border-radius:14px;background:transparent;border:0.5px solid rgba(255,255,255,.2);color:var(--text);font-size:14px;margin-top:10px}
+.btn-g{width:100%;padding:15px;border-radius:14px;background:linear-gradient(135deg,#c9a84c,#8b5e1a);border:none;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
 
-/* NAVIGATION WALLETS */
-.wallet-selector{display:flex;gap:8px;padding:10px 18px;overflow-x:auto;scrollbar-width:none}
+/* NAVIGATION */
+.wallet-selector{display:flex;gap:8px;padding:10px 18px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
 .wallet-selector::-webkit-scrollbar{display:none}
 .pill{padding:8px 16px;border-radius:20px;background:rgba(255,255,255,.06);border:0.5px solid rgba(255,255,255,.12);color:var(--muted);font-size:13px;font-weight:600;white-space:nowrap;transition:0.2s}
 .pill.active{background:var(--gold);color:#000;border-color:var(--gold)}
 
-/* STACK CARDS */
-.stack{position:relative;flex:1;overflow:hidden;margin-top:10px}
-.wcard{position:absolute;left:14px;right:14px;height:180px;border-radius:22px;overflow:hidden;transition:top .4s cubic-bezier(.4,0,.2,1);box-shadow:0 10px 30px rgba(0,0,0,.5)}
-.ci{padding:20px;height:100%;display:flex;flex-direction:column;justify-content:space-between}
-.ct{display:flex;justify-content:space-between;align-items:flex-start}
-.ct-n{font-size:19px;font-weight:800;letter-spacing:-.02em}
-.ct-c{font-size:10px;text-transform:uppercase;opacity:.6;margin-bottom:4px}
-.ct-i{font-size:24px}
+/* ASCENSEUR (Elevator) */
+.elevator-container{position:relative;flex:1;display:flex;overflow:hidden}
+.stack-scroll{flex:1;overflow-y:auto;padding-bottom:100px;scrollbar-width:none;position:relative}
+.stack-scroll::-webkit-scrollbar{display:none}
 
-/* COULEURS DES CARTES */
+/* CARDS */
+.wcard{position:absolute;left:14px;right:14px;height:170px;border-radius:22px;overflow:hidden;transition:transform 0.3s ease;box-shadow:0 8px 25px rgba(0,0,0,0.5)}
+.ci{padding:20px;height:100%;display:flex;flex-direction:column;justify-content:space-between}
+.ct-n{font-size:18px;font-weight:800;letter-spacing:-.02em}
+.ct-c{font-size:10px;text-transform:uppercase;opacity:.6}
+
+/* COLORS */
 .t1{background:linear-gradient(135deg,#1a3380,#0a1840)}
 .t2{background:linear-gradient(135deg,#4a1580,#1a0835)}
 .t3{background:linear-gradient(135deg,#0e5c3a,#052818)}
@@ -69,47 +70,38 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
 .t5{background:linear-gradient(135deg,#0b5060,#031e28)}
 .t6{background:linear-gradient(135deg,#7a1010,#2e0505)}
 
-/* SHEET DETAIL */
+/* SHEET */
 #dpanel{position:fixed;inset:0;z-index:100;pointer-events:none}
 #dov{position:absolute;inset:0;background:rgba(0,0,0,0);transition:background .4s}
-#dsheet{position:absolute;bottom:0;left:0;right:0;background:#1a1a26;border-radius:26px 26px 0 0;transform:translateY(100%);transition:transform .45s cubic-bezier(.4,0,.2,1);max-height:85vh;overflow-y:auto;padding-bottom:var(--sb)}
+#dsheet{position:absolute;bottom:0;left:0;right:0;background:#1a1a26;border-radius:26px 26px 0 0;transform:translateY(100%);transition:transform .4s;max-height:85vh;overflow-y:auto}
 #dpanel.open{pointer-events:all}
 #dpanel.open #dov{background:rgba(0,0,0,.7)}
 #dpanel.open #dsheet{transform:translateY(0)}
 
-/* TOAST */
-#toast{position:fixed;top:calc(var(--st) + 12px);left:16px;right:16px;border-radius:14px;padding:14px;font-size:14px;text-align:center;transform:translateY(-110px);transition:0.4s;z-index:999}
+#toast{position:fixed;top:40px;left:20px;right:20px;padding:15px;border-radius:12px;text-align:center;transform:translateY(-150%);transition:0.4s;z-index:999;font-weight:600}
 #toast.show{transform:translateY(0)}
 .t-ok{background:#32c864;color:#fff}
 .t-er{background:#ff5050;color:#fff}
-
 </style>
 </head>
 <body>
 
-<!-- ÉCRAN LOCK -->
 <div id="lock" class="screen">
-  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px">
-    <div style="font-size:60px;margin-bottom:20px">💼</div>
-    <h2 style="font-size:26px">Wallet Chogan</h2>
-    <p style="color:var(--muted);padding:0 40px;margin-top:10px">Accès réservé aux consultantes autorisées.</p>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px">
+    <div style="font-size:60px">💼</div>
+    <h2 style="margin-top:20px">Wallet Chogan</h2>
   </div>
   <div style="background:var(--surface);padding:30px 20px calc(30px + var(--sb));border-radius:30px 30px 0 0">
     <label class="form-label">Code d'accès</label>
-    <input class="finput" id="uc" type="text" placeholder="Entrez votre code" style="text-align:center;letter-spacing:4px">
-    <button class="btn-g" onclick="tryUnlock()">Accéder au Wallet</button>
-    <button class="btn-o" onclick="toast('Contactez l\'admin pour obtenir un code','ok')">Demander l'accès</button>
+    <input class="finput" id="uc" type="password" placeholder="••••••••" style="text-align:center">
+    <button class="btn-g" onclick="tryUnlock()">Se connecter</button>
   </div>
 </div>
 
-<!-- ÉCRAN PRINCIPAL -->
 <div id="main" class="screen hidden">
   <div style="padding:calc(20px + var(--st)) 20px 10px;display:flex;justify-content:space-between;align-items:center">
-    <div>
-      <div style="font-size:12px;color:var(--gold);font-weight:700;text-transform:uppercase">Portefeuille</div>
-      <div id="wh-title" style="font-size:24px;font-weight:800">Catalogue</div>
-    </div>
-    <div onclick="avTap()" style="width:42px;height:42px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:#000;font-weight:800;font-size:14px;cursor:pointer">WC</div>
+    <div><div id="wh-title" style="font-size:24px;font-weight:800">Catalogue</div></div>
+    <div onclick="avTap()" style="width:40px;height:40px;border-radius:50%;background:var(--gold);color:#000;display:flex;align-items:center;justify-content:center;font-weight:800;cursor:pointer">WC</div>
   </div>
 
   <div class="wallet-selector">
@@ -118,15 +110,15 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
     <div class="pill" id="p-scripts" onclick="switchWallet('scripts')">📝 Scripts</div>
   </div>
 
-  <div class="stack" id="stack"></div>
-  <div style="text-align:center;padding:15px;font-size:11px;color:var(--muted)">Appuyez sur une carte pour voir les détails</div>
+  <div class="elevator-container">
+    <div class="stack-scroll" id="stack"></div>
+  </div>
 </div>
 
-<!-- PANEL DETAIL -->
 <div id="dpanel">
   <div id="dov" onclick="cls()"></div>
   <div id="dsheet">
-    <div style="width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:12px auto"></div>
+    <div style="width:40px;height:4px;background:rgba(255,255,255,.2);margin:12px auto;border-radius:2px"></div>
     <div id="sc" style="padding:20px"></div>
   </div>
 </div>
@@ -134,46 +126,47 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
 <div id="toast"></div>
 
 <script>
-/* ═══════════════════════════════════════════
-   DATA : LES 3 UNIVERS
-   ═══════════════════════════════════════════ */
 const WALLETS = {
   knowledge: [
-    { t: "Guide de Vente", s: "Techniques", c: "t1", e: "🧠", items: [
-        { n: "Objection Prix", d: "Rappeler que c'est un extrait de parfum à 30%, pas une eau de toilette.", q: "Argument" },
-        { n: "L'origine", d: "Fragrance produite à Grasse, conditionnée en Italie par Chogan.", q: "Identité" }
+    { t: "Histoire de Chogan", s: "Fondements", c: "t1", e: "📜", items: [
+      { n: "Origine", d: "Entreprise italienne créée en 2013.", q: "Info" },
+      { n: "Partenariat Fragworld", d: "Essences produites à Grasse, leader mondial.", q: "Qualité" }
     ]},
-    { t: "Histoire de la Marque", s: "Fondements", c: "t2", e: "📜", items: [
-        { n: "Création", d: "Fondée en 2013, leader européen de l'inspiration parfumée.", q: "Histoire" }
+    { t: "Traitement Objections", s: "Vente", c: "t2", e: "💬", items: [
+      { n: "C'est un faux ?", d: "Non, c'est un extrait de parfum Chogan. La fragrance appartient au producteur Fragworld, pas à la marque de luxe.", q: "Argument" },
+      { n: "Le prix bas ?", d: "Pas de publicité, pas de stars, pas d'intermédiaires.", q: "Argument" }
     ]}
   ],
   products: [
-    { t: "Parfums Luxury", s: "Extraits", c: "t3", e: "💎", items: [
-        { n: "Luxury Homme", d: "Concentration intense, tenue 24h+.", q: "Luxe" },
-        { n: "Luxury Femme", d: "Essences rares et flacons prestigieux.", q: "Top" }
+    { t: "Parfums Luxury", s: "Extraits 30%", c: "t3", e: "💎", items: [
+      { n: "Inspiré par Jador", d: "Féminin, floral, élégant.", q: "Réf 001" },
+      { n: "Inspiré par Sauvage", d: "Masculin, frais, puissant.", q: "Réf 002" }
     ]},
-    { t: "Maison & Hygiène", s: "Chogan Home", c: "t5", e: "🏠", items: [
-        { n: "Degreaser Plus", d: "Dégraissant universel alimentaire.", q: "Best-seller" },
-        { n: "Bagnolux", d: "Anti-calcaire brillant salle de bain.", q: "Maison" }
+    { t: "Entretien Maison", s: "Hautement concentré", c: "t5", e: "🏠", items: [
+      { n: "Degreaser Plus", d: "Dégraissant surpuissant alimentaire.", q: "Best-seller" },
+      { n: "Bagnolux", d: "Anti-calcaire effet brillant immédiat.", q: "Top" }
     ]}
   ],
   scripts: [
-    { t: "Coiffeur / Barbier", s: "B2B", c: "t1", e: "💇", items: [
-        { n: "Argument : Marge", d: "Augmentez votre CA sans investissement lourd.", q: "Revente" },
-        { n: "Script", d: "« J'aide les salons à offrir une expérience parfumée de luxe à leurs clients. »", q: "Phrase" }
+    { t: "Salon de Coiffure", s: "B2B", c: "t1", e: "💇", items: [
+      { n: "Argument : Revenu", d: "Gagnez 50% de marge sur chaque parfum vendu sans changer votre métier.", q: "Profit" },
+      { n: "Argument : Fidélisation", d: "Offrez un échantillon après une coupe pour marquer l'esprit.", q: "Marketing" }
     ]},
-    { t: "Esthéticienne / Spa", s: "B2B", c: "t2", e: "🧖", items: [
-        { n: "Argument : Qualité", d: "Gamme à la bave d'escargot certifiée Bio.", q: "Soin" },
-        { n: "Script", d: "« Proposez des soins cabine pro à vos clientes pour leur domicile. »", q: "Phrase" }
+    { t: "Esthéticienne", s: "B2B", c: "t2", e: "🧖", items: [
+      { n: "Argument : Complément", d: "Utilisez les huiles Chogan (Neem, Argan) pendant les soins.", q: "Soin" },
+      { n: "Phrase clé", d: "« Prolongez l'expérience du soin chez vous avec nos extraits de parfum. »", q: "Script" }
     ]},
-    { t: "Fleuriste", s: "B2B", c: "t4", e: "💐", items: [
-        { n: "Argument : Ambiance", d: "Vendez des parfums d'intérieur avec vos bouquets.", q: "Cross-sell" }
+    { t: "Fleuriste", s: "B2B", c: "t3", e: "💐", items: [
+      { n: "Argument : Cadeau", d: "Associez un bouquet à un parfum pour un cadeau complet.", q: "Vente" }
     ]},
-    { t: "Tatoueur", s: "B2B", c: "t6", e: "🐾", items: [
-        { n: "Argument : Cicatrisation", d: "L'huile de Neem Chogan est parfaite pour le post-tatouage.", q: "Spécifique" }
+    { t: "Salles de Sport", s: "B2B", c: "t4", e: "🏋️", items: [
+      { n: "Hygiène Luxe", d: "Gels douche parfumés pour les douches premium.", q: "Image" }
     ]},
-    { t: "Immobilier", s: "B2B", c: "t5", e: "🏠", items: [
-        { n: "Marketing Olfactif", d: "Diffuseurs pour déclencher le coup de cœur en visite.", q: "Vente" }
+    { t: "Agences Immo", s: "B2B", c: "t5", e: "🏠", items: [
+      { n: "Marketing Olfactif", d: "Parfumez les biens pour déclencher le coup de cœur.", q: "Vente" }
+    ]},
+    { t: "Garages / VTC", s: "B2B", c: "t6", e: "🚗", items: [
+      { n: "Expérience Client", d: "Un véhicule qui sent le luxe justifie un service premium.", q: "Service" }
     ]}
   ]
 };
@@ -181,119 +174,87 @@ const WALLETS = {
 let currentWallet = 'products';
 let history = [];
 
-/* ═══════════════════════════════════════════
-   MOTEUR DE L'APP
-   ═══════════════════════════════════════════ */
 function tryUnlock() {
-  const code = document.getElementById('uc').value.trim().toUpperCase();
-  if(code === ACCESS_CODE) {
-    localStorage.setItem('cg_ok', 'true');
-    askName();
-  } else if (code === ADMIN_CODE) {
-    toast("Mode Admin activé", "ok");
-    // Logique admin ici
-  } else {
-    toast("Code invalide", "er");
-  }
-}
-
-function askName() {
-  const n = prompt("Entrez votre prénom pour personnaliser vos rapports :");
-  if(n) {
-    localStorage.setItem('cg_name', n);
-    startApp();
-  }
-}
-
-function startApp() {
-  document.getElementById('lock').classList.add('hidden');
-  document.getElementById('main').classList.remove('hidden');
-  switchWallet('products');
+  if(document.getElementById('uc').value === ACCESS_CODE) {
+    document.getElementById('lock').classList.add('hidden');
+    document.getElementById('main').classList.remove('hidden');
+    switchWallet('products');
+  } else { toast("Code incorrect", "er"); }
 }
 
 function switchWallet(key) {
   currentWallet = key;
   document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
   document.getElementById('p-'+key).classList.add('active');
-  
-  const titles = {knowledge:"Guide Vente", products:"Catalogue", scripts:"Prospection"};
+  const titles = {knowledge:"Savoir", products:"Catalogue", scripts:"Collaborations"};
   document.getElementById('wh-title').textContent = titles[key];
-  
   buildStack();
 }
 
 function buildStack() {
-  const container = document.getElementById('stack');
-  container.innerHTML = '';
+  const stack = document.getElementById('stack');
+  stack.innerHTML = '';
   const data = WALLETS[currentWallet];
   
   data.forEach((cat, i) => {
     const card = document.createElement('div');
     card.className = `wcard ${cat.c}`;
-    card.style.top = (i * 42) + "px";
+    // L'ascenseur se crée ici par le décalage vertical
+    card.style.top = (i * 50) + "px"; 
     card.style.zIndex = i;
     card.onclick = () => openCard(i);
-    card.innerHTML = `
-      <div class="ci">
-        <div class="ct">
-          <div><div class="ct-c">${cat.s}</div><div class="ct-n">${cat.t}</div></div>
-          <div class="ct-i">${cat.e}</div>
-        </div>
-      </div>`;
-    container.appendChild(card);
+    card.innerHTML = `<div class="ci">
+      <div style="display:flex;justify-content:space-between">
+        <div><div class="ct-c">${cat.s}</div><div class="ct-n">${cat.t}</div></div>
+        <div style="font-size:24px">${cat.e}</div>
+      </div>
+      <div style="font-size:10px; opacity:0.5">TAP POUR OUVRIR</div>
+    </div>`;
+    stack.appendChild(card);
   });
+  // Ajuster la hauteur du scroll pour l'ascenseur
+  stack.style.height = (data.length * 50 + 150) + "px";
 }
 
 function openCard(idx) {
   const cat = WALLETS[currentWallet][idx];
-  const sc = document.getElementById('sc');
-  sc.innerHTML = `
-    <h2 style="font-size:22px;margin-bottom:4px">${cat.t}</h2>
-    <p style="color:var(--muted);font-size:14px;margin-bottom:20px">${cat.s}</p>
+  document.getElementById('sc').innerHTML = `
+    <h2 style="margin-bottom:15px">${cat.t}</h2>
     ${cat.items.map(it => `
-      <div style="background:var(--card);padding:16px;border-radius:16px;margin-bottom:10px;border:0.5px solid rgba(255,255,255,.08)">
-        <div style="font-size:11px;color:var(--gold);font-weight:700;text-transform:uppercase">${it.q}</div>
-        <div style="font-weight:700;margin:4px 0">${it.n}</div>
-        <div style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.4">${it.d}</div>
+      <div style="background:var(--card);padding:15px;border-radius:12px;margin-bottom:10px;border-left:4px solid var(--gold)">
+        <div style="font-size:10px;color:var(--gold);font-weight:bold">${it.q}</div>
+        <div style="font-weight:bold;margin:5px 0">${it.n}</div>
+        <div style="font-size:13px;opacity:0.7">${it.d}</div>
       </div>
     `).join('')}
-    <button class="btn-g" style="margin-top:20px" onclick="cls()">Fermer</button>
+    <button class="btn-g" style="margin-top:15px" onclick="cls()">Fermer</button>
   `;
-  history.push({ t: cat.t, h: new Date().toLocaleTimeString() });
   document.getElementById('dpanel').classList.add('open');
+  history.push(cat.t);
 }
 
 function cls() { document.getElementById('dpanel').classList.remove('open'); }
 
 function toast(m, type) {
   const t = document.getElementById('toast');
-  t.textContent = m;
-  t.className = 'show t-' + type;
+  t.textContent = m; t.className = 'show t-' + type;
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
 async function avTap() {
-  const name = localStorage.getItem('cg_name') || "Consultante";
-  if(confirm(`Bonjour ${name}, envoyer le rapport de session à l'admin ?`)) {
-    if(history.length === 0) { toast("Aucune activité", "er"); return; }
-    
-    const body = `Session de ${name}\nActivités :\n${history.map(h=>`[${h.h}] ${h.t}`).join('\n')}`;
-    
+  if(confirm("Envoyer le rapport de session ?")) {
+    if(history.length === 0) return toast("Rien à envoyer", "er");
     try {
       await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ access_key: W3F_KEY, to: ADMIN_EMAIL, subject: `Rapport : ${name}`, message: body })
+        body: JSON.stringify({ access_key: W3F_KEY, to: ADMIN_EMAIL, message: "Consultation : " + history.join(', ') })
       });
-      toast("Rapport envoyé !", "ok");
+      toast("Envoyé !", "ok");
       history = [];
-    } catch(e) { toast("Erreur d'envoi", "er"); }
+    } catch(e) { toast("Erreur réseau", "er"); }
   }
 }
-
-window.onload = () => {
-  if(localStorage.getItem('cg_ok')) startApp();
-};
 </script>
 </body>
 </html>
