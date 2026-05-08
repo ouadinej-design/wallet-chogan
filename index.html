@@ -3,73 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Wallet Chogan">
-<meta name="theme-color" content="#ffffff">
-<title>Wallet Chogan</title>
+<title>Wallet Chogan Expert - White Edition</title>
 
 <script>
 /* 🔧 CONFIGURATION */
-const ACCESS_CODE = "CHOGAN2024";
-const ADMIN_CODE  = "ADMIN#2025";
-const ADMIN_EMAIL = "ouadi.nej@gmail.com";
-const W3F_KEY     = "04e1ce0c-3c62-413d-ab06-7fdfe1afd91a";
+const ACCESS_CODE = "CHOGAN2024";           
+const ADMIN_EMAIL = "ouadi.nej@gmail.com"; 
+const W3F_KEY     = "04e1ce0c-3c62-413d-ab06-7fdfe1afd91a"; 
 </script>
 
 <style>
-/* 🎨 THÈME BLANC ÉPURÉ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#ffffff;           /* Fond blanc */
-  --surface:#f2f2f7;      /* Gris clair Apple pour le relief */
+  --bg:#ffffff;           /* FOND BLANC */
+  --surface:#f2f2f7;      /* Gris clair type Apple */
   --card:#ffffff;         /* Cartes blanches */
-  --text:#1c1c1e;         /* Texte noir foncé */
+  --text:#1c1c1e;         /* Texte noir */
   --muted:#8e8e93;        /* Texte gris */
   --gold:#c9a84c;
   --st:env(safe-area-inset-top,0px);
   --sb:env(safe-area-inset-bottom,0px);
 }
+html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--text)}
 
-html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--text)}
+/* SCREENS */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;transition:0.38s}
+.hidden{opacity:0;pointer-events:none;transform:scale(0.96)}
 
-/* ÉCRANS */
-.screen{position:fixed;inset:0;display:flex;flex-direction:column;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1),opacity 0.4s;z-index:10}
-.hidden{opacity:0;pointer-events:none;transform:scale(0.95)}
-
-/* NAVIGATION */
-.wallet-nav{display:flex;gap:12px;padding:15px 20px;overflow-x:auto;flex-shrink:0;scrollbar-width:none}
+/* NAV */
+.wallet-nav{display:flex;gap:10px;padding:15px 20px;overflow-x:auto;flex-shrink:0;scrollbar-width:none}
 .wallet-nav::-webkit-scrollbar{display:none}
-.pill{padding:10px 20px;border-radius:20px;background:var(--surface);color:var(--text);font-size:13px;font-weight:700;white-space:nowrap;transition:0.2s;border:none}
-.pill.active{background:var(--text);color:#fff}
+.pill{padding:10px 18px;border-radius:25px;background:var(--surface);border:0.5px solid rgba(0,0,0,0.05);color:var(--text);font-size:12px;font-weight:700;white-space:nowrap;transition:0.2s}
+.pill.active{background:var(--text);color:#fff;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
 
-/* PILE DE CARTES (ASCENSEUR) */
-.stack-container{flex:1;position:relative;margin:10px 15px;perspective:1000px}
-.wcard{position:absolute;left:0;right:0;height:220px;border-radius:28px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.08);transition:transform 0.4s cubic-bezier(0.16,1,0.3,1), z-index 0.1s;border:1px solid rgba(0,0,0,0.05)}
+/* ELEVATOR / CARTES ÉLARGIES */
+.elevator{flex:1;overflow-y:auto;position:relative;padding-bottom:200px}
+.elevator::-webkit-scrollbar{display:none}
 
-.ci{padding:25px;height:100%;display:flex;flex-direction:column;justify-content:space-between;position:relative}
-.ct-c{font-size:11px;text-transform:uppercase;font-weight:800;letter-spacing:1px;opacity:0.6}
-.ct-n{font-size:26px;font-weight:900;letter-spacing:-0.5px;line-height:1.1;margin-top:4px}
+.wcard{position:absolute;left:15px;right:15px;height:220px;border-radius:32px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,0.08);transition:transform 0.3s ease;border:1px solid rgba(0,0,0,0.04)}
+.ci{padding:30px;height:100%;display:flex;flex-direction:column;justify-content:space-between}
+.ct-n{font-size:28px;font-weight:900;letter-spacing:-1px;line-height:1.2;margin-top:5px}
+.ct-c{font-size:12px;text-transform:uppercase;opacity:0.6;font-weight:800;letter-spacing:2px}
 
-/* COULEURS DES CARTES */
-.t1{background:linear-gradient(135deg,#f8f9fa,#e9ecef)} /* Sécurité */
-.t2{background:linear-gradient(135deg,#ffffff,#f2f2f7)} /* Orgueil */
-.t3{background:linear-gradient(135deg,#fdfbf7,#f5f0e1)} /* Nouveauté */
+/* DÉGRADÉS LÉGERS POUR LE MODE CLAIR */
+.t1{background:linear-gradient(135deg,#f8f9ff,#e0e7ff)} 
+.t2{background:linear-gradient(135deg,#fdfaff,#f3e8ff)} 
+.t3{background:linear-gradient(135deg,#f0fdf4,#dcfce7)} 
+.t4{background:linear-gradient(135deg,#fffbeb,#fef3c7)} 
+.t5{background:linear-gradient(135deg,#f0f9ff,#e0f2fe)} 
+.t6{background:linear-gradient(135deg,#fef2f2,#fee2e2)} 
 
-/* MODAL / SHEET */
-#dpanel{position:fixed;inset:0;z-index:1000;pointer-events:none}
-#dov{position:absolute;inset:0;background:rgba(0,0,0,0.4);opacity:0;transition:0.4s}
-#dsheet{position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:30px 30px 0 0;transform:translateY(100%);transition:0.4s cubic-bezier(0.16,1,0.3,1);max-height:85vh;overflow-y:auto;padding:30px;box-shadow:0 -10px 40px rgba(0,0,0,0.1)}
+/* SHEET / MODAL */
+#dpanel{position:fixed;inset:0;z-index:100;pointer-events:none}
+#dov{position:absolute;inset:0;background:rgba(0,0,0,0);transition:0.4s}
+#dsheet{position:absolute;bottom:0;left:0;right:0;background:#ffffff;border-radius:35px 35px 0 0;transform:translateY(100%);transition:0.4s cubic-bezier(0.16, 1, 0.3, 1);max-height:88vh;overflow-y:auto;padding:30px;box-shadow:0 -10px 40px rgba(0,0,0,0.1)}
 #dpanel.open{pointer-events:all}
-#dpanel.open #dov{opacity:1}
+#dpanel.open #dov{background:rgba(0,0,0,0.3)}
 #dpanel.open #dsheet{transform:translateY(0)}
 
-/* BOUTONS */
-.btn-g{width:100%;padding:18px;border-radius:16px;background:#1c1c1e;border:none;color:#fff;font-size:16px;font-weight:700;margin-top:15px}
-.finput{width:100%;background:var(--surface);border:none;border-radius:14px;padding:16px;color:var(--text);margin-bottom:15px;text-align:center;font-size:16px}
-
-#toast{position:fixed;top:50px;left:20px;right:20px;padding:15px;border-radius:12px;text-align:center;transform:translateY(-200%);transition:0.4s;z-index:9999;font-weight:700;color:#fff}
+.btn-g{width:100%;padding:18px;border-radius:18px;background:#1c1c1e;border:none;color:#fff;font-size:16px;font-weight:800;margin-top:15px}
+.finput{width:100%;background:var(--surface);border:1px solid rgba(0,0,0,0.05);border-radius:15px;padding:18px;color:var(--text);margin-bottom:15px;text-align:center;font-size:18px}
+#toast{position:fixed;top:50px;left:20px;right:20px;padding:18px;border-radius:15px;text-align:center;transform:translateY(-250%);transition:0.5s;z-index:999;font-weight:800;color:#fff}
 #toast.show{transform:translateY(0)}
 </style>
 </head>
@@ -77,8 +72,8 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);font-famil
 
 <div id="lock" class="screen">
     <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
-        <div style="font-size:80px">💼</div>
-        <h1 style="margin-top:20px;font-weight:900">CHOGAN PRO</h1>
+        <div style="font-size:80px">🔱</div>
+        <h1 style="margin-top:25px;letter-spacing:3px;font-weight:900">CHOGAN PRO</h1>
     </div>
     <div style="padding:40px;background:var(--surface);border-radius:40px 40px 0 0">
         <input class="finput" id="uc" type="password" placeholder="CODE ACCÈS">
@@ -87,24 +82,24 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);font-famil
 </div>
 
 <div id="main" class="screen hidden">
-    <div style="padding:calc(20px + var(--st)) 25px 10px;display:flex;justify-content:space-between;align-items:center">
-        <h2 id="title" style="font-size:28px;font-weight:900">Catalogue</h2>
-        <div onclick="adminTap()" style="width:40px;height:40px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:900">WC</div>
+    <div style="padding:calc(30px + var(--st)) 25px 15px;display:flex;justify-content:space-between;align-items:center">
+        <h2 id="wh-title" style="font-size:28px;font-weight:900">Guide Vente</h2>
+        <div onclick="avTap()" style="width:45px;height:45px;border-radius:50%;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;cursor:pointer">WC</div>
     </div>
 
     <div class="wallet-nav">
-        <div class="pill active" id="p-knowledge" onclick="switchTab('knowledge')">🧠 GUIDE VENTE</div>
-        <div class="pill" id="p-products" onclick="switchTab('products')">🛍️ PRODUITS</div>
-        <div class="pill" id="p-scripts" onclick="switchTab('scripts')">🤝 COLLABS</div>
+        <div class="pill active" id="p-knowledge" onclick="switchWallet('knowledge')">🧠 GUIDE VENTE</div>
+        <div class="pill" id="p-products" onclick="switchWallet('products')">🛍️ PRODUITS</div>
+        <div class="pill" id="p-scripts" onclick="switchWallet('scripts')">🤝 COLLABS</div>
     </div>
 
-    <div class="stack-container" id="stack"></div>
+    <div class="elevator" id="stack"></div>
 </div>
 
 <div id="dpanel">
-    <div id="dov" onclick="closeSheet()"></div>
+    <div id="dov" onclick="cls()"></div>
     <div id="dsheet">
-        <div style="width:40px;height:5px;background:#e5e5ea;margin:0 auto 20px;border-radius:10px"></div>
+        <div style="width:50px;height:5px;background:#e5e5ea;margin:0 auto 25px;border-radius:3px"></div>
         <div id="sc"></div>
     </div>
 </div>
@@ -112,88 +107,161 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);font-famil
 <div id="toast"></div>
 
 <script>
-const DATA = {
+const WALLETS = {
     knowledge: [
-        { t: "S - Sécurité", s: "SONCAS", c: "t1", e: "🛡️", items: [{n:"Argument", d:"Extraits à 30%, certifié BIO et SCIC."}] },
-        { t: "O - Orgueil", s: "SONCAS", c: "t2", e: "👑", items: [{n:"Luxe", d:"Le prestige de Grasse sans le prix marketing."}] },
-        { t: "N - Nouveauté", s: "SONCAS", c: "t3", e: "✨", items: [{n:"Innovation", d:"Nouveaux flacons et fragrances chaque mois."}] },
-        { t: "C - Confort", s: "SONCAS", c: "t1", e: "🛋️", items: [{n:"Service", d:"Livraison directe et conseil personnalisé."}] },
-        { t: "A - Argent", s: "SONCAS", c: "t2", e: "💰", items: [{n:"Prix", d:"3 à 4 fois moins cher que les parfumeries classiques."}] },
-        { t: "S - Sympathie", s: "SONCAS", c: "t3", e: "🤝", items: [{n:"Éthique", d:"Produits non testés sur les animaux, naturels."}] }
+        { t: "S - Sécurité", s: "Méthode SONCAS", c: "t1", e: "🛡️", items: [
+            { n: "Argument TENUE", d: "Extraits à 30% d'essence. Tenue garantie 8h à 24h sur peau et vêtements.", q: "SÉCURITÉ" },
+            { n: "Argument QUALITÉ", d: "Certifications BIO, SCIC, sans paraben, non testé sur les animaux.", q: "SÉCURITÉ" },
+            { n: "Argument ORIGINE", d: "Essences produites à Grasse par Fragworld, leader mondial.", q: "SÉCURITÉ" }
+        ]},
+        { t: "O - Orgueil", s: "Méthode SONCAS", c: "t2", e: "👑", items: [
+            { n: "Argument PRESTIGE", d: "Gamme Luxury avec flacons dorés. Le luxe sans le prix marketing.", q: "ORGUEIL" },
+            { n: "Argument EXCLUSIVITÉ", d: "Portez des fragrances rares que l'on ne trouve pas partout.", q: "ORGUEIL" }
+        ]},
+        { t: "N - Nouveauté", s: "Méthode SONCAS", c: "t3", e: "✨", items: [
+            { n: "Argument INNOVATION", d: "Nouveaux catalogues réguliers et packaging modernisé.", q: "NOUVEAUTÉ" },
+            { n: "Argument TENDANCE", d: "Inspirations des derniers lancements haute couture.", q: "NOUVEAUTÉ" }
+        ]},
+        { t: "C - Confort", s: "Méthode SONCAS", c: "t4", e: "🛋️", items: [
+            { n: "Argument SERVICE", d: "Je vous livre directement. Conseil personnalisé selon vos goûts.", q: "CONFORT" },
+            { n: "Argument USAGE", d: "Flacons adaptés à votre sac ou salle de bain.", q: "CONFORT" }
+        ]},
+        { t: "A - Argent", s: "Méthode SONCAS", c: "t5", e: "💰", items: [
+            { n: "Argument PRIX", d: "Le même produit, la même odeur, mais 3 à 4 fois moins cher.", q: "ARGENT" },
+            { n: "Argument ÉCONOMIE", d: "Pourquoi payer la publicité ? Payez juste le parfum.", q: "ARGENT" }
+        ]},
+        { t: "S - Sympathie", s: "Méthode SONCAS", c: "t6", e: "🤝", items: [
+            { n: "Argument RELATION", d: "Entreprise familiale. Soutien au commerce de proximité.", q: "SYMPATHIE" },
+            { n: "Argument ÉTHIQUE", d: "Produits naturels, respectueux de l'environnement.", q: "SYMPATHIE" }
+        ]}
     ],
     products: [
-        { t: "Parfumerie Expert", s: "Catégorie 1", c: "t1", e: "🧴", items: [{n:"Extraits", d:"Plus de 130 inspirations célèbres à 30% d'essence."}] },
-        { t: "Bave d'Escargot", s: "Catégorie 2", c: "t2", e: "🐌", items: [{n:"Soin", d:"Régénérant puissant pour rides et acné."}] },
-        { t: "Entretien Maison", s: "Catégorie 3", c: "t3", e: "🏠", items: [{n:"HACCP", d:"Gamme pro Bagnolux et Degreaser."}] }
+        { t: "Extraits de Parfums", s: "Parfumerie", c: "t1", e: "🧴", items: [
+            { n: "Concentration 30%", d: "La plus haute concentration du marché. Ni eau de toilette, ni eau de parfum.", q: "QUALITÉ" },
+            { n: "Fragworld Grasse", d: "Essences produites à Grasse.", q: "ORIGINE" }
+        ]},
+        { t: "Gamme Luxury", s: "Parfumerie", c: "t2", e: "💎", items: [
+            { n: "Prestige", d: "Design exclusif, finitions premium.", q: "LUXE" }
+        ]},
+        { t: "Bave d'Escargot", s: "Soins Visage", c: "t3", e: "🐌", items: [
+            { n: "Régénération", d: "Réduit rides, cicatrices et acné.", q: "BIO" }
+        ]},
+        { t: "Huile de Neem", s: "Soins Spécifiques", c: "t4", e: "🌿", items: [
+            { n: "Peaux à problèmes", d: "Eczéma, psoriasis et mycoses.", q: "NATUREL" }
+        ]},
+        { t: "Nettoyage Maison", s: "Entretien Pro", c: "t5", e: "🏠", items: [
+            { n: "Bagnolux / Degreaser", d: "Efficacité professionnelle certifiée HACCP.", q: "MAISON" }
+        ]},
+        { t: "Maquillage Pro", s: "Beauty Line", c: "t6", e: "💄", items: [
+            { n: "Longue Tenue", d: "Rouges à lèvres sans transfert et fonds de teint pro.", q: "MAKE-UP" }
+        ]},
+        { t: "Aloe Vera", s: "Bien-être", c: "t3", e: "🌵", items: [
+            { n: "Gel Purifié", d: "Apaisant après-soleil et boisson détox.", q: "SANTÉ" }
+        ]},
+        { t: "Huiles Essentielles", s: "Aromathérapie", c: "t4", e: "💧", items: [
+            { n: "100% Pures", d: "Lavande, Tea Tree, Eucalyptus.", q: "NATURE" }
+        ]},
+        { t: "Ligne Solaire", s: "Saison", c: "t4", e: "☀️", items: [
+            { n: "Protection UV", d: "SPF 15, 30, 50 et accélérateur de bronzage.", q: "ÉTÉ" }
+        ]},
+        { t: "Hygiène Corps", s: "Quotidien", c: "t1", e: "🛁", items: [
+            { n: "Gels Douche", d: "Parfumés selon vos fragrances préférées.", q: "PLAISIR" }
+        ]}
     ],
     scripts: [
-        { t: "Coiffeurs", s: "B2B", c: "t1", e: "💇", items: [{n:"Collaboration", d:"Dépôt-vente pour augmenter le panier moyen."}] },
-        { t: "Instituts", s: "B2B", c: "t2", e: "🧖", items: [{n:"Collaboration", d:"Complément de soins avec nos gammes BIO."}] }
+        { t: "Coiffeur / Barbier", s: "Collab B2B", c: "t1", e: "💇", items: [
+            { n: "Business", d: "Augmentez votre CA sans temps supplémentaire.", q: "REVENU" },
+            { n: "Collaboration", d: "Mise en place de testeurs en salon.", q: "PARTENARIAT" }
+        ]},
+        { t: "Institut de Beauté", s: "Collab B2B", c: "t2", e: "🧖", items: [
+            { n: "Suivi Soin", d: "Vente de produits bio pour le domicile.", q: "FIDÉLITÉ" },
+            { n: "Collaboration", d: "Utilisation des huiles en cabine.", q: "QUALITÉ" }
+        ]}
     ]
 };
 
-let currentTab = 'knowledge';
+let currentWallet = 'knowledge';
+let history = [];
 
 function tryUnlock() {
     if(document.getElementById('uc').value.toUpperCase() === ACCESS_CODE) {
         document.getElementById('lock').classList.add('hidden');
         document.getElementById('main').classList.remove('hidden');
-        renderStack();
-    } else { showToast("CODE INCORRECT", "#ff3b30"); }
+        switchWallet('knowledge');
+    } else { toast("CODE INCORRECT", "#ff3b30"); }
 }
 
-function switchTab(tab) {
-    currentTab = tab;
+function switchWallet(key) {
+    currentWallet = key;
     document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-    document.getElementById('p-'+tab).classList.add('active');
-    renderStack();
+    document.getElementById('p-'+key).classList.add('active');
+    const titles = {knowledge:"Guide Vente", products:"Catalogue", scripts:"Collabs Pro"};
+    document.getElementById('wh-title').textContent = titles[key];
+    buildStack();
 }
 
-function renderStack() {
-    const container = document.getElementById('stack');
-    container.innerHTML = '';
-    const items = DATA[currentTab];
-    items.forEach((item, i) => {
+function buildStack() {
+    const stack = document.getElementById('stack');
+    stack.innerHTML = '';
+    const data = WALLETS[currentWallet];
+    
+    data.forEach((cat, i) => {
         const card = document.createElement('div');
-        card.className = `wcard ${item.c}`;
-        card.style.top = (i * 50) + 'px';
+        card.className = `wcard ${cat.c}`;
+        card.style.top = (i * 85) + "px"; 
         card.style.zIndex = i;
-        card.onclick = () => openCard(item);
-        card.innerHTML = `
-            <div class="ci">
-                <div><div class="ct-c">${item.s}</div><div class="ct-n">${item.t}</div></div>
-                <div style="font-size:40px;align-self:flex-end">${item.e}</div>
-            </div>`;
-        container.appendChild(card);
+        card.onclick = () => openCard(i);
+        card.innerHTML = `<div class="ci">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <div style="flex:1">
+                    <div class="ct-c">${cat.s}</div>
+                    <div class="ct-n">${cat.t}</div>
+                </div>
+                <div style="font-size:45px; opacity:0.8">${cat.e}</div>
+            </div>
+            <div style="font-size:11px; font-weight:900; color:var(--muted)">DÉTAILS →</div>
+        </div>`;
+        stack.appendChild(card);
     });
 }
 
-function openCard(item) {
+function openCard(idx) {
+    const cat = WALLETS[currentWallet][idx];
+    history.push(cat.t);
     document.getElementById('sc').innerHTML = `
-        <h2 style="font-size:24px;margin-bottom:20px">${item.t}</h2>
-        ${item.items.map(it => `
-            <div style="background:var(--surface);padding:15px;border-radius:12px;margin-bottom:10px">
-                <div style="font-weight:800;font-size:14px">${it.n}</div>
-                <div style="font-size:14px;color:var(--muted)">${it.d}</div>
+        <h2 style="margin-bottom:25px; font-size:28px; color:var(--text); font-weight:900">${cat.t}</h2>
+        ${cat.items.map(it => `
+            <div style="background:var(--surface);padding:22px;border-radius:24px;margin-bottom:15px;border-left:6px solid var(--gold)">
+                <div style="font-size:11px;color:var(--gold);font-weight:900;text-transform:uppercase">${it.q}</div>
+                <div style="font-weight:800;margin:8px 0;font-size:19px">${it.n}</div>
+                <div style="font-size:16px;color:var(--muted);line-height:1.5">${it.d}</div>
             </div>
         `).join('')}
-        <button class="btn-g" onclick="closeSheet()">FERMER</button>
+        <button class="btn-g" onclick="cls()">RETOUR AU WALLET</button>
     `;
     document.getElementById('dpanel').classList.add('open');
 }
 
-function closeSheet() { document.getElementById('dpanel').classList.remove('open'); }
+function cls() { document.getElementById('dpanel').classList.remove('open'); }
 
-function showToast(m, c) {
+function toast(m, c) {
     const t = document.getElementById('toast');
     t.textContent = m; t.style.background = c;
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-function adminTap() {
-    const code = prompt("Code ADMIN requis :");
-    if(code === ADMIN_CODE) alert("Mode Admin activé (Statistiques envoyées)");
+async function avTap() {
+    if(confirm("Envoyer le rapport ?")) {
+        try {
+            await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ access_key: W3F_KEY, to: ADMIN_EMAIL, message: "Consultations : " + history.join(", ") })
+            });
+            toast("ENVOYÉ", "#34c759");
+        } catch(e) { toast("ERREUR", "#ff3b30"); }
+    }
 }
 </script>
 </body>
