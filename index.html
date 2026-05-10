@@ -218,8 +218,11 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
 .fp{padding:5px 14px;border-radius:20px;background:rgba(255,255,255,.08);
   border:0.5px solid rgba(255,255,255,.14);font-size:12px;font-weight:600}
 .fa{opacity:.28;font-size:14px;align-self:center}
-.shbody{flex:1;overflow-y:auto;padding:10px 18px calc(28px + var(--sb));-webkit-overflow-scrolling:touch}
-.shbody::-webkit-scrollbar{display:none}
+.shbody{flex:1;overflow-y:auto;padding:10px 18px calc(28px + var(--sb));-webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.25) transparent;}
+.shbody::-webkit-scrollbar{width:4px}
+.shbody::-webkit-scrollbar-track{background:transparent}
+.shbody::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25);border-radius:2px}
 .si{display:flex;align-items:flex-start;gap:13px;padding:13px 0;
   border-bottom:0.5px solid rgba(255,255,255,.07);animation:up .3s both}
 .si:last-child{border-bottom:none}
@@ -362,6 +365,12 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
       <button class="sh-x" onclick="cls()">✕</button>
     </div>
     <div id="sc"></div>
+    <div id="scroll-hint" style="position:absolute;bottom:0;left:0;right:0;height:56px;
+      background:linear-gradient(to top,rgba(26,26,38,.98) 60%,transparent);
+      display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;
+      pointer-events:none;transition:opacity .3s;z-index:5;border-radius:0 0 26px 26px">
+      <span style="font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.04em">↓ faire défiler</span>
+    </div>
   </div>
 </div>
 
@@ -863,6 +872,18 @@ function openCard(c){
       <div class="shhv">${c.hero.v}</div><div class="shhl">${c.hero.l}</div>
     </div>${flow}<div class="shbody">${rows}</div>`;
   document.getElementById('dpanel').classList.add('open');
+  // Show/hide scroll hint
+  setTimeout(()=>{
+    const body=document.querySelector('.shbody');
+    const hint=document.getElementById('scroll-hint');
+    if(!body||!hint) return;
+    function checkScroll(){
+      const atBottom=body.scrollHeight-body.scrollTop-body.clientHeight<20;
+      hint.style.opacity=atBottom?'0':'1';
+    }
+    checkScroll();
+    body.addEventListener('scroll',checkScroll,{passive:true});
+  },100);
 }
 
 function cls(){
