@@ -218,13 +218,26 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
 .fp{padding:5px 14px;border-radius:20px;background:rgba(255,255,255,.08);
   border:0.5px solid rgba(255,255,255,.14);font-size:12px;font-weight:600}
 .fa{opacity:.28;font-size:14px;align-self:center}
-.shbody{flex:1;overflow-y:auto;padding:10px 14px calc(28px + var(--sb)) 18px;
-  -webkit-overflow-scrolling:touch;
-  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.3) rgba(255,255,255,.06);}
-.shbody::-webkit-scrollbar{width:5px}
-.shbody::-webkit-scrollbar-track{background:rgba(255,255,255,.06);border-radius:3px}
-.shbody::-webkit-scrollbar-thumb{background:rgba(255,255,255,.35);border-radius:3px}
-.shbody::-webkit-scrollbar-thumb:active{background:rgba(255,255,255,.6)}
+.shbody{flex:1;overflow-y:auto;padding:10px 60px calc(28px + var(--sb)) 18px;
+  -webkit-overflow-scrolling:touch;}
+.shbody::-webkit-scrollbar{display:none}
+/* Sheet elevator */
+.sheet-elev{
+  position:absolute;right:0;top:0;bottom:0;width:52px;
+  z-index:10;touch-action:none;
+  background:linear-gradient(to left,rgba(255,255,255,.05),transparent);
+  display:flex;align-items:center;justify-content:center;
+}
+.sheet-elev-track{
+  width:5px;height:70%;
+  background:rgba(255,255,255,.12);border-radius:3px;position:relative;
+}
+.sheet-elev-thumb{
+  position:absolute;left:50%;transform:translateX(-50%);
+  width:11px;height:44px;top:0;
+  background:rgba(255,255,255,.65);border-radius:6px;
+  box-shadow:0 2px 8px rgba(0,0,0,.4);
+}
 .si{display:flex;align-items:flex-start;gap:13px;padding:13px 0;
   border-bottom:0.5px solid rgba(255,255,255,.07);animation:up .3s both}
 .si:last-child{border-bottom:none}
@@ -366,27 +379,20 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
       <button class="sh-back" onclick="cls()">← Retour</button>
       <button class="sh-x" onclick="cls()">✕</button>
     </div>
+    <div style="position:relative;flex:1;overflow:hidden;display:flex;flex-direction:column">
     <div id="sc"></div>
-    
-  </div>
-  <!-- Scroll fade indicator — outside dsheet to avoid overflow:hidden clip -->
-  <div id="scroll-fade" style="
-    position:absolute;bottom:0;left:0;right:0;height:70px;
-    background:linear-gradient(to top,#1a1a26 30%,transparent);
-    display:flex;align-items:flex-end;justify-content:center;
-    padding-bottom:12px;pointer-events:none;
-    transition:opacity .3s;opacity:0;z-index:110;
-    border-radius:0 0 26px 26px;">
-    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;animation:bounce 1.5s ease-in-out infinite">
-      <span style="font-size:18px">↓</span>
-      <span style="font-size:10px;letter-spacing:.04em;opacity:.7">faire défiler</span>
+    <div class="sheet-elev" id="sheet-elev">
+      <div class="sheet-elev-track" id="sheet-elev-track">
+        <div class="sheet-elev-thumb" id="sheet-elev-thumb"></div>
+      </div>
     </div>
   </div>
+    
+  </div>
+
 </div>
 
-<style>
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
-</style>
+
 
 <!-- ADMIN PW -->
 <div id="apov">
@@ -891,8 +897,7 @@ function openCard(c){
 
 function cls(){
   document.getElementById('dpanel').classList.remove('open');
-  const fade=document.getElementById('scroll-fade');
-  if(fade) fade.style.opacity='0';
+
 }
 
 // Close sheet: swipe down on header
