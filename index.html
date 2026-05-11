@@ -378,7 +378,16 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
     </div>
     <div class="sh-close-row">
       <button class="sh-back" onclick="cls()">← Retour</button>
-      <button class="sh-x" onclick="cls()">✕</button>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="scroll-btn" onclick="scrollSheet()" style="
+          width:36px;height:36px;border-radius:50%;
+          background:rgba(255,255,255,.1);
+          border:0.5px solid rgba(255,255,255,.2);
+          color:#fff;font-size:18px;cursor:pointer;
+          display:flex;align-items:center;justify-content:center;
+          font-family:inherit;">↓</button>
+        <button class="sh-x" onclick="cls()">✕</button>
+      </div>
     </div>
     <div id="sc"></div>
     
@@ -387,25 +396,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
 </div>
 
 
-
-<!-- SCROLL DOWN BUTTON -->
-<button id="scroll-btn" onclick="scrollSheet()" style="
-  position:fixed;
-  right:18px;
-  bottom:calc(100px + var(--sb));
-  width:52px;height:52px;
-  border-radius:50%;
-  background:rgba(255,255,255,.18);
-  border:0.5px solid rgba(255,255,255,.35);
-  color:#fff;font-size:22px;
-  cursor:pointer;
-  z-index:999;
-  display:none;
-  align-items:center;justify-content:center;
-  backdrop-filter:blur(10px);
-  box-shadow:0 4px 20px rgba(0,0,0,.5);
-  font-family:inherit;
-">↓</button>
 
 <!-- ADMIN PW -->
 <div id="apov">
@@ -930,8 +920,7 @@ function updateScrollBtn(){
 
 function cls(){
   document.getElementById('dpanel').classList.remove('open');
-  const btn=document.getElementById('scroll-btn');
-  if(btn) btn.style.display='none';
+
 
 }
 
