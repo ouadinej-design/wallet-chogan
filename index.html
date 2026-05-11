@@ -100,11 +100,9 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
 
 /* ── MAIN ── */
 #main{background:var(--bg)}
-.status{height:calc(44px + var(--st));padding-top:var(--st);
-  display:flex;align-items:center;justify-content:space-between;
-  padding-left:20px;padding-right:20px;flex-shrink:0}
-.s-time{font-size:15px;font-weight:700}
-.s-ico{font-size:12px;opacity:.7}
+
+
+
 .wh{padding:6px 22px 4px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
 .wh-b{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
 .wh-t{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-top:2px}
@@ -331,10 +329,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
 
 <!-- MAIN -->
 <div id="main" class="screen hidden">
-  <div class="status">
-    <div class="s-time" id="clk">--:--</div>
-    <div class="s-ico">▲▲▲ WiFi 🔋</div>
-  </div>
+  <div style="padding-top:var(--st);height:calc(12px + var(--st));flex-shrink:0"></div>
   <div class="wh">
     <div>
       <div class="wh-b">Wallet Chogan</div>
