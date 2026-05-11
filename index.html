@@ -224,13 +224,10 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
   -webkit-overflow-scrolling:touch;
   touch-action:pan-y;
   overscroll-behavior:contain;
-  padding:10px 20px calc(24px + var(--sb)) 18px;
-  scrollbar-width:auto;
-  scrollbar-color:rgba(201,168,76,.8) rgba(255,255,255,.08);
+  padding:10px 14px calc(24px + var(--sb)) 18px;
+  scrollbar-width:none;
 }
-.shbody::-webkit-scrollbar{width:8px}
-.shbody::-webkit-scrollbar-track{background:rgba(255,255,255,.06);border-radius:4px}
-.shbody::-webkit-scrollbar-thumb{background:rgba(201,168,76,.8);border-radius:4px;min-height:40px}
+.shbody::-webkit-scrollbar{display:none}
 /* Sheet elevator */
 .sheet-elev{
   position:absolute;right:0;top:0;bottom:0;width:52px;
@@ -393,6 +390,21 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);
 </div>
 
 
+
+<!-- JS SCROLLBAR — gold indicator, works on Android -->
+<div id="jsbar" style="
+  position:absolute;right:4px;
+  width:6px;border-radius:3px;
+  background:rgba(255,255,255,.08);
+  display:none;z-index:300;
+  pointer-events:none;
+">
+  <div id="jsbar-thumb" style="
+    position:absolute;width:100%;
+    background:#c9a84c;border-radius:3px;
+    min-height:36px;top:0;
+  "></div>
+</div>
 
 <!-- ADMIN PW -->
 <div id="apov">
@@ -897,6 +909,7 @@ function openCard(c){
 
 function cls(){
   document.getElementById('dpanel').classList.remove('open');
+  const b=document.getElementById('jsbar'); if(b) b.style.display='none';
 
 
 }
