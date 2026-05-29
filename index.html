@@ -403,10 +403,9 @@ function SS(n){
   if(n==='main'){buildPills();tick();}
 }
 function init(){
-  if(LS.g('ok')){SS('main');return;}
-  const pr=LS.g('pr');
-  if(pr){showPend(pr);return;}
-  SS('lock');
+  // Free access — go straight to main
+  LS.s('ok', true);
+  SS('main');
 }
 
 /* ── REQUEST ── */
@@ -468,7 +467,7 @@ function saveName(){
   document.getElementById('name-ov')?.remove();
   SS('main');
 }
-function getName(){return LS.g('consultant_name')||'Inconnue';}
+function getName(){return LS.g('consultant_name')||'Consultante';}
 
 /* ── ADMIN ── */
 function showAdminPw(){
